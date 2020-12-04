@@ -82,7 +82,7 @@ namespace InfinityHelper.Server.Core
             {
                 return 0;
             }
-            return d.Split(',').Where(p=>!string.IsNullOrEmpty(p)).Select(p => int.Parse(p)).Sum();
+            return d.Split(',').Where(p => !string.IsNullOrEmpty(p)).Select(p => int.Parse(p)).Sum();
         }
 
         private ICharacter FindBattleChar(BattleResult battle, string name)
@@ -95,7 +95,7 @@ namespace InfinityHelper.Server.Core
             return relChar;
         }
 
-        private void GenerateBattleChars(BattleResult battle, bool isGroup = false,Dictionary<string,int> lifeBeforeDict = null)
+        private void GenerateBattleChars(BattleResult battle, bool isGroup = false, Dictionary<string, int> lifeBeforeDict = null)
         {
             for (var j = 0; j < battle.GameMonList.Count; j++)
             {
@@ -129,7 +129,7 @@ namespace InfinityHelper.Server.Core
                     battle.LifeBefore[p.Id] = p.Life;
                     battle.LifeAfter[p.Id] = p.Life;
                 }
-            }        
+            }
         }
 
         private void GenerateBattleTurn(BattleResult battle, BattleTurn turn, bool isDirect = true)
@@ -166,33 +166,35 @@ namespace InfinityHelper.Server.Core
                     battle.Statistics.Add(attacker.Id, new BattleStatisticsData() { Id = attacker.Id, Name = attacker.Name });
                 }
 
-                switch (turn.HurtType)
+                if (turn.SkillName == "[反击]")
                 {
-                    case BattleHurtType.PhysicalDamage:
-                        battle.Statistics[attacker.Id].PhysicalDamage += ConvertDamage(turn.Hurt);break;
-                    case BattleHurtType.MagicalDamage:
-                        battle.Statistics[attacker.Id].MagicalDamage += ConvertDamage(turn.Hurt); break;
-                    case BattleHurtType.DotDamage:
-                        {
-                            if (turn.SkillName == "[反击]")
-                            {
-                                battle.Statistics[attacker.Id].CounterDamage += ConvertDamage(turn.Hurt);
-                            }
-                            else
-                            {
-                                battle.Statistics[attacker.Id].DotDamage += ConvertDamage(turn.Hurt);
-                            }
+                    battle.Statistics[attacker.Id].CounterDamage += ConvertDamage(turn.Hurt);
+                }
+                else
+                {
+                    switch (turn.HurtType)
+                    {
+                        case BattleHurtType.PhysicalDamage:
+                            battle.Statistics[attacker.Id].PhysicalDamage += ConvertDamage(turn.Hurt);
                             break;
-                        }
-                    case BattleHurtType.Heal:
-                        battle.Statistics[attacker.Id].Heal += ConvertDamage(turn.Hurt);
-                        break;
-                    default:break;
+                        case BattleHurtType.MagicalDamage:
+                            battle.Statistics[attacker.Id].MagicalDamage += ConvertDamage(turn.Hurt); 
+                            break;
+                        case BattleHurtType.DotDamage: battle.Statistics[attacker.Id].DotDamage += ConvertDamage(turn.Hurt); 
+                            break;
+                        case BattleHurtType.Heal:
+                            battle.Statistics[attacker.Id].Heal += ConvertDamage(turn.Hurt);
+                            break;
+                        case null:
+                            battle.Statistics[attacker.Id].NormalDamage += ConvertDamage(turn.Hurt);
+                            break;
+                        default: break;
+                    }
                 }
             }
         }
 
-        private void MergeHpList(List<BattleTurnHp> source,List<BattleTurnHp> newList)
+        private void MergeHpList(List<BattleTurnHp> source, List<BattleTurnHp> newList)
         {
             List<BattleTurnHp> addList = new List<BattleTurnHp>();
             foreach (var x in newList)

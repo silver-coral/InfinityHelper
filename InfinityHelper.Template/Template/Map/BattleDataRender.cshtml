@@ -9,7 +9,8 @@
         <tr>
             <td class="text-center">名称</td>
             <td class="text-center">治疗</td>
-            <td class="text-center">伤害</td>   
+            <td class="text-center">伤害</td> 
+            <td class="text-center">普攻</td> 
             <td class="text-center">物理</td>
             <td class="text-center">法术</td>
             <td class="text-center">反击</td>
@@ -23,6 +24,7 @@
                 <td class="text-center name">@d.Value.Name</td> 
                 <td class="text-center heal">@(d.Value.Heal)</td>
                 <td class="text-center fire">@(d.Value.TotalDamage)</td>
+                <td class="text-center fire">@(d.Value.NormalDamage)</td>
                 <td class="text-center physical">@(d.Value.PhysicalDamage)</td>            
                 <td class="text-center magical">@(d.Value.MagicalDamage)</td>
                 <td class="text-center state">@(d.Value.CounterDamage)</td>

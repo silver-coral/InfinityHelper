@@ -64,7 +64,8 @@ namespace InfinityHelper.Server.Core
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public int DirectDamage { get { return this.PhysicalDamage + this.MagicalDamage; } }
+        public int DirectDamage { get { return this.NormalDamage + this.PhysicalDamage + this.MagicalDamage; } }
+        public int NormalDamage { get; set; }
         public int PhysicalDamage { get; set; }
         public int MagicalDamage { get; set; }
         public int CounterDamage { get; set; }

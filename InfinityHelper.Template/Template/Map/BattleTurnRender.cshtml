@@ -7,25 +7,39 @@
 <div class="turn">
     <ul class="turn-data" data-hp='@Html.Raw(JsonUtil.Serialize(Model.HpList))'></ul>
     <div>
-        @(Model.CurrentTurn).<span class="name">@(Model.Attacker)</span>
+        @(Model.CurrentTurn).<span class="name">@(Model.Attacker)</span>  
         @if (Model.IsSkill == 1)
         {
             @:使用技能
             <span class="skill skill-name">@(Model.SkillName)</span>
         }
-        攻击了<span class="name">@(Model.Hinjured)</span>
+        @if (Model.HurtType == BattleHurtType.Heal)
+        {
+            @:治疗了<span class="name">@(Model.Hinjured)</span>
+        }
+        else
+        {
+            @:攻击了<span class="name">@(Model.Hinjured)</span>
+        }
         @if (Model.IsCritical == 1)
         {
             @:，造成了<span class="state">暴击</span>
         }
-        @if (Model.Hurt != "0") 
-        { 
-            @:，造成<span class="damage">@(Model.Hurt)</span>伤害
-        }       
-        @if (Model.IsCritical == 2)
+        else if (Model.IsCritical == 2)
         {
-            @:，但是被<span class="state">闪避</span>，没有造成伤害
+            @:，但是被<span class="state">闪避</span>
         }
+        @if (Model.Hurt != "0")
+        {
+            if(Model.HurtType == BattleHurtType.Heal)
+            {
+                @:，回复<span class="heal">@(Model.Hurt)</span>生命
+            }
+            else
+            {
+                @:，造成<span class="damage">@(Model.Hurt)</span>伤害
+            }            
+        }        
         @if(Model.HinjuredConmbatList != null)
         {
             foreach(var t in Model.HinjuredConmbatList)
