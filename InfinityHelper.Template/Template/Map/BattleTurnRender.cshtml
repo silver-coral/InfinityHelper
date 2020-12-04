@@ -21,8 +21,8 @@
         @if (Model.Hurt != "0") 
         { 
             @:，造成<span class="damage">@(Model.Hurt)</span>伤害
-        }
-        else
+        }       
+        @if (Model.IsCritical == 2)
         {
             @:，但是被<span class="state">闪避</span>，没有造成伤害
         }
@@ -38,7 +38,6 @@
                 }
                 伤害
                 </div>
-
                 if (t.IsDeath == 1)
                 {
                     @:<span class="name">@(t.Hinjured)</span>死亡了
