@@ -1,0 +1,33 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<BattleResult>
+@{ 
+    Layout = null;
+}
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <td class="text-center">名称</td>
+            <td class="text-center">治疗</td>
+            <td class="text-center">伤害</td>   
+            <td class="text-center">物理</td>
+            <td class="text-center">法术</td>
+            <td class="text-center">反击</td>
+            <td class="text-center">持续</td>            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model.Statistics)
+        {            
+            <tr>
+                <td class="text-center name">@d.Value.Name</td> 
+                <td class="text-center heal">@(d.Value.Heal)</td>
+                <td class="text-center fire">@(d.Value.TotalDamage)</td>
+                <td class="text-center physical">@(d.Value.PhysicalDamage)</td>            
+                <td class="text-center magical">@(d.Value.MagicalDamage)</td>
+                <td class="text-center state">@(d.Value.CounterDamage)</td>
+                <td class="text-center state">@(d.Value.DotDamage)</td>                
+            </tr>
+        }
+    </tbody>
+</table>

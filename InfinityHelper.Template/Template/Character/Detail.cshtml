@@ -1,0 +1,467 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Text;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<CharacterDetailModel>
+@{
+    Character c = Model.Character;
+}
+@section head{
+    <script type="text/javascript" src="~/Scripts/Map.js?v=20201106"></script>
+    <script type="text/javascript" src="~/Scripts/Char.js?v=20201125"></script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <span>@Html.Raw(c.Name)</span>
+                    <span class="label label-info">编号@(c.AccountId)</span>
+                    @if (c.IsGuaji)
+                    {
+                        <span class="label label-info">挂机</span>
+                    } 
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-success char-refresh" role="button">同步</a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <div class="media-left">
+                        <img class="media-object img-circle img-thumbnail" style="width:100px;height:100px;" src="@c.Face" alt="..." />
+                    </div>
+                    <div class="media-body">
+                        <div>                           
+                            <span class="label label-default">Lv@(c.Level)</span>                            
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-life" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>Hp：@c.Health</span>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-mana" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>Mp：@c.Mana</span>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-exp" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-percent="@(c.ExpPercent)%">
+                                    <span>@(c.ExpPercent)%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <p>
+                            <span>等级经验：<span class="state">@c.Exp / @(c.UpgradeExp)</span></span>
+                        </p>
+                        <p class="sr-container">
+                            <span>修真经验：<span class="state">@c.RealmExp / @(c.RealmUpExp)</span><span></span></span>
+                            <span class="sr-only label label-info" data-toggle="modal" data-target="#modalRealm" >突破</span>
+                        </p>
+                        <p>
+                            <span>铜币：<span class="physical">@(c.Money)</span></span>
+                        </p>
+                        <p>
+                            <span>金币：<span class="lightning">@(c.Coin)</span></span>
+                        </p>
+                        <p>
+                            <span>剩余副本奖励次数：</span><span class="state">@(c.RewardNum)</span>
+                        </p>                                            
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    地图  
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">   
+                            <a class="btn btn-xs btn-danger epm-reset" role="button">重置效率</a>
+                            <a class="btn btn-xs btn-default" href="#" data-toggle="modal" data-target="#modalMap" role="button">切换</a>                        
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>地图名称：</span><span class="physical">@(Model.CurrentMap.MapName)</span>
+                        </p>                                                
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>怪物等级：</span><span class="physical">@(Model.CurrentMap.MapMinLv) ~ @(Model.CurrentMap.MapMaxLv)</span>
+                        </p>                                              
+                    </div>                                         
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>战斗次数：</span><span class="state">@(Model.Site.Dynamic.BattleLevelTotalCount)</span>
+                        </p>                                                
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>平均效率：</span><span class="state">@(Model.Site.Dynamic.EPM)</span>
+                        </p>                                              
+                    </div> 
+                    <div class="col-xs-12 col-sm-12 col-md-12">                        
+                        <p>
+                            <span>总挂机时间：</span><span class="state">@(Model.CharacterDynamic.TotalTimeStr)</span>
+                        </p>                                              
+                    </div>
+                    @{
+                        var upTime = Model.Site.Dynamic.GetUpgradeTime(c.UpgradeExp - c.Exp);
+                        if(upTime != null)
+                        {        
+                            <div class="col-xs-12 col-sm-12 col-md-12"> 
+                                <p>
+                                    <span>预计升级时间：@(string.Format("{0:yyyy-MM-dd HH:mm:ss}",upTime))</span>
+                                </p>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="panel-footer">
+                    @if (c.IsGuaji)
+                    {
+                        var bc = BattleScheduler.CharDict[c.Id];
+                        <span>胜率<span class="state"> @(Model.Site.Dynamic.WinRate)%</span></span>
+                    }
+                    else
+                    {
+                        @:&nbsp;
+                    }
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            @if (c.IsGuaji)
+                            {
+                                <a class="btn btn-xs btn-info" href="/Map/Guaji" role="button">挂机状态</a>
+                                <a class="btn btn-xs btn-danger battle-cancel" href="#" role="button">取消挂机</a>
+                            }
+                            else
+                            {
+                                if (Model.ArmyGroup != null)
+                                {
+                                    if (Model.Site.CheckIsGroupCaption())
+                                    {
+                                        if (Model.ArmyGroup.CharaInfoVoList.Count == 3)
+                                        {
+                                            <a class="btn btn-xs btn-primary battle-guaji" href="#" role="button">开始挂机</a> 
+                                        }
+                                        else
+                                        {
+                                            <span>队伍未满员</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-xs btn-info" href="/Map/Guaji" role="button">副本状态</a> 
+                                    }
+                                }
+                                else
+                                {
+                                    <a class="btn btn-xs btn-primary battle-guaji" href="#" role="button">开始挂机</a> 
+                                }                                                           
+                            }                        
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    技能     
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-default" href="/skill/bag" role="button">配置</a>
+                        </div>
+                    }                    
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-6 col-sm-6 col-md-6 skill-container">
+                        <p><span class="label label-default">主动技能</span></p>
+                        @foreach (var s in Model.SkillList)
+                        {
+                            <p class="sr-container">
+                                @Html.Partial("/Skill/SkillNameRender.cshtml", s)
+                            </p>
+                            <div class="skill-content">
+                                @Html.Partial("/Skill/SkillRender.cshtml", s)
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 skill-container">
+                        <p><span class="label label-default">被动技能</span></p>
+                        @foreach (var s in Model.PassiveSkillList)
+                        {
+                            <p class="sr-container">
+                                @Html.Partial("/Skill/SkillNameRender.cshtml", s)
+                            </p>
+                            <div class="skill-content">
+                                @Html.Partial("/Skill/SkillRender.cshtml", s)
+                            </div>
+                        }
+                    </div>
+                </div>                
+            </div>            
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    属性
+                    @if (c.ReAttrPoint > 0 && !Model.IsReadOnly)
+                    {
+                        <span class="badge attr-points">@c.ReAttrPoint</span>
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-success attr-save" href="#" role="button">确认修改</a>                           
+                        </div>
+                    }                   
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p><span class="label label-default">境界</span></p>
+                        <p>
+                            <span>当前境界：</span><span class="set">@(c.RealmName)</span>
+                        </p>
+                        <p>
+                            <span>生命加成：</span><span class="heal">@(Model.RealmBonus.HealthPercent)%</span>
+                        </p>
+                        <p>
+                            <span>法力加成：</span><span class="magical">@(Model.RealmBonus.ManaPercent)%</span>
+                        </p>
+                        <p><span class="label label-default">境界加成</span></p>
+                        <p>
+                            <span>物理攻击：</span><span class="physical">@(Model.RealmBonus.AttackPercent)%</span>
+                        </p>
+                        <p>
+                            <span>法术攻击：</span><span class="physical">@(Model.RealmBonus.MagicAttackPercent)%</span>
+                        </p>
+                        <p>
+                            <span>防御：</span><span class="physical">@(Model.RealmBonus.DefensePercent)%</span>
+                        </p>
+                        <p>
+                            <span>命中率：</span><span class="state">@(Model.RealmBonus.HitRatePercent)%</span>
+                        </p>
+                        <p>
+                            <span>闪避率：</span><span class="state">@(Model.RealmBonus.EvadePercent)%</span>
+                        </p>
+                        <p>
+                            <span>暴击率：</span><span class="state">@(Model.RealmBonus.CriticalPercent)%</span>
+                        </p>
+                        <p>
+                            <span>暴击伤害：</span><span class="state">@(Model.RealmBonus.CriticalDamagePercent)%</span>
+                        </p>
+                        <p>
+                            <span>行动速度：</span><span class="magical">@(Model.RealmBonus.SpeedPercent)%</span>
+                        </p>                        
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <p><span class="label label-default">基础</span></p>
+                        <p>
+                            <span>体格：</span><span class="physical" data-add="0" id="char-str">@(c.Physique)</span>
+                            @if (c.ReAttrPoint > 0 && !Model.IsReadOnly)
+                            {
+                                <span class="label label-danger attr-add">&nbsp;+1&nbsp;</span>
+                                <span class="label label-danger attr-add10">&nbsp;+10&nbsp;</span>
+                            }
+                        </p>
+                        <p>
+                            <span>灵巧：</span><span class="physical" data-add="0" id="char-dex">@(c.Dexterous)</span>
+                            @if (c.ReAttrPoint > 0 && !Model.IsReadOnly)
+                            {
+                                <span class="label label-danger attr-add">&nbsp;+1&nbsp;</span>
+                                <span class="label label-danger attr-add10">&nbsp;+10&nbsp;</span>
+                            }
+                        </p>
+                        <p>
+                            <span>灵力：</span><span class="physical" data-add="0" id="char-eng">@(c.Spirit)</span>
+                            @if (c.ReAttrPoint > 0 && !Model.IsReadOnly)
+                            {
+                                <span class="label label-danger attr-add">&nbsp;+1&nbsp;</span>
+                                <span class="label label-danger attr-add10">&nbsp;+10&nbsp;</span>
+                            }
+                        </p>
+                        <p><span class="label label-default">综合</span></p>
+                        <p>
+                            <span>物理攻击：</span><span class="physical">@(c.PhysicalAttack)</span>
+                        </p>
+                        <p>
+                            <span>法术攻击：</span><span class="physical">@(c.MagicAttack)</span>
+                        </p>
+                        <p>
+                            <span>防御：</span><span class="physical">@(c.Defense)</span>
+                        </p>
+                        <p>
+                            <span>命中率：</span><span class="state">@(c.HitRatePercent)%</span>
+                        </p>
+                        <p>
+                            <span>闪避率：</span><span class="state">@(c.EvadePercent)%</span>
+                        </p>
+                        <p>
+                            <span>暴击率：</span><span class="state">@(c.CriticalPercent)%</span>
+                        </p>
+                        <p>
+                            <span>暴击伤害：</span><span class="state">@(c.CriticalDamagePercent)%</span>
+                        </p>
+                        <p>
+                            <span>行动速度：</span><span class="magical">@c.MovingSpeed</span>
+                        </p>
+                        <p>
+                            <span>幸运值：</span><span class="heal">@c.Lucky</span>
+                        </p>                        
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    队伍
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-default" href="/Character/Group" role="button">管理</a>
+                        </div>
+                    }                    
+                </div>
+                <div class="panel-body">
+                    <div class="char-container">
+                        <p>                            
+                            @if (Model.HasGroup)
+                            {
+                                <span class="name">@Model.ArmyGroup.ArmyName</span>
+                            }
+                            else
+                            {
+                                <span>没有加入队伍</span>
+                            }
+                        </p>
+                        @if (Model.ArmyGroup != null)
+                        {
+                            foreach (var ac in Model.ArmyGroup.CharaInfoVoList)
+                            {
+                                string className = ac.IsCaption ? "label-warning" : "label-default";
+                                <p class="sr-container">
+                                    <span class="label @(className)">Lv@(ac.CharaLevel)</span>
+                                    <span class="name">@(ac.CharaName)</span>
+                                    @*<span class="label label-info">编号@(ac.CharaNo)</span>*@
+                                </p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    装备
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-default" href="/equip/bag" role="button">背包</a>
+                        </div>
+                    }                    
+                </div>
+                <div class="panel-body equip-container">
+                    @foreach (var e in Model.CharEquipList)
+                    {                       
+                        <p data-id="@e.RealId">
+                            <span>@e.TypeDec：</span>                            
+                            <span class="c@((int)e.Color) equip-name">【@(e.RealName)】</span>
+                        </p>
+                        <div class="equip-content">
+                            @Html.Partial("/Equip/EquipRender.cshtml", e)
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">
+                    商店/合成/材料
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-default" href="/equip/material" role="button">查看</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">统计</div>
+                <div class="panel-body">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <p><span class="label label-default">掉落</span></p>
+                        <p>
+                            <span>黑装：</span><span class="c1">@(Model.CharacterDynamic.DropItemsCount.ContainsKey(ItemColor.Black) ? Model.CharacterDynamic.DropItemsCount[ItemColor.Black] : 0)</span>
+                        </p>
+                        <p>
+                            <span>黄装：</span><span class="c2">@(Model.CharacterDynamic.DropItemsCount.ContainsKey(ItemColor.Yellow) ? Model.CharacterDynamic.DropItemsCount[ItemColor.Yellow] : 0)</span>
+                        </p>
+                        <p>
+                            <span>绿装：</span><span class="c3">@(Model.CharacterDynamic.DropItemsCount.ContainsKey(ItemColor.Green) ? Model.CharacterDynamic.DropItemsCount[ItemColor.Green] : 0)</span>
+                        </p>
+                        <p>
+                            <span>蓝装：</span><span class="c4">@(Model.CharacterDynamic.DropItemsCount.ContainsKey(ItemColor.Blue) ? Model.CharacterDynamic.DropItemsCount[ItemColor.Blue] : 0)</span>
+                        </p>
+                        <p>
+                            <span>紫装：</span><span class="c5">@(Model.CharacterDynamic.DropItemsCount.ContainsKey(ItemColor.Pink) ? Model.CharacterDynamic.DropItemsCount[ItemColor.Pink] : 0)</span>
+                        </p> 
+                        <p>
+                            <span>红装：</span><span class="c6">@(Model.CharacterDynamic.DropItemsCount.ContainsKey(ItemColor.Red) ? Model.CharacterDynamic.DropItemsCount[ItemColor.Red] : 0)</span>
+                        </p>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <p><span class="label label-default">战斗</span></p>
+                        <p>
+                            <span>总战斗次数：</span><span class="state">@(Model.CharacterDynamic.BattleTotalCount)</span>
+                        </p>
+                        <p>
+                            <span>总胜利次数：</span><span class="state">@(Model.CharacterDynamic.BattleWinCount)</span>
+                        </p>
+                        <p>
+                            <span>总胜率：</span><span class="state">@(Model.CharacterDynamic.TotalWinRate)%</span>
+                        </p>  
+                        @*<p>
+                            <span>总铜币：</span><span class="physical">@Model.CharacterDynamic.TotalMoney</span>
+                        </p>*@
+                    </div>
+                </div>
+            </div>             
+        </div>       
+    </div>
+</div>
+<div class="modal fade" id="modalMap" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">切换地图</span>                                
+            </div>
+            <div class="modal-body">                
+                <div class="form-group">
+                    <label for="map" class="control-label">地图选择</label>
+                    <select id="map" name="map" class="form-control">                        
+                        @foreach (var p in Model.MapList)
+                        {                           
+                            <option value="@p.MapId">@(p.MapName)（@(p.MapMinLv)~@(p.MapMaxLv)）</option>
+                        }
+                    </select>
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs map-apply">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalRealm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">境界突破</span>                                
+            </div>
+            <div class="modal-body"> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs realm-up">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

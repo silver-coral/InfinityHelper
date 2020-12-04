@@ -1,0 +1,44 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<Synthetic>
+@{
+    Layout = null;
+    Synthetic e = Model;
+}
+<div class="equip">
+    <p>
+        <span class="equip-label">合成最低境界：</span>
+        <span class="set">@e.SyntheticRealm</span>
+    </p>
+    <p>
+        <span class="equip-label">合成消耗经验：</span>
+        <span class="state">@(e.SyntheticExp ?? 0)</span>
+    </p>
+    <p>
+        <span class="equip-label">合成消耗铜钱：</span>
+        <span class="physical">@(e.SyntheticMoney ?? 0)</span>
+    </p>
+    @if (!string.IsNullOrEmpty(e.MaterOneName))
+    {
+        <p>
+            <span class="equip-label">@e.MaterOneName：</span>
+            <span>@e.MaterOneNum</span>
+        </p>    
+    }
+    @if (!string.IsNullOrEmpty(e.MaterTwoName))
+    {
+        <p>
+            <span class="equip-label">@e.MaterTwoName：</span>
+            <span>@e.MaterTwoNum</span>
+        </p>    
+    }
+    @if (!string.IsNullOrEmpty(e.MaterThreeName))
+    {
+        <p>
+            <span class="equip-label">@e.MaterThreeName：</span>
+            <span>@e.MaterThreeNum</span>
+        </p>    
+    }
+    <p class="divider"></p> 
+    <p class="physical equip-des">@e.SyntheticDesci</p>
+</div>

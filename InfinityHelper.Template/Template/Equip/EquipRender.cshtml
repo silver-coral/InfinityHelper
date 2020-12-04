@@ -1,0 +1,156 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<ItemBase>
+@{
+    Layout = null;
+    ItemBase e = Model;    
+}
+<div class="equip">
+    <p class="c@((int)e.Color)">@e.RealName</p>
+    <p>
+        <span class="equip-label">类型：</span>
+        <span>@e.TypeDec</span>
+    </p>
+    <p>
+        <span class="equip-label">等级：</span>
+        <span>@e.Level</span>
+    </p>
+    @if (e.Attack > 0)
+    {
+        <p>
+            <span class="equip-label">物理伤害：</span>
+            <span>@e.Attack</span>
+            @if(e.StrengAttack > 0)
+            {
+                <span class="state"> + @e.StrengAttack</span>
+            }
+        </p>
+    }
+    @if (e.MagAttack > 0)
+    {
+        <p>
+            <span class="equip-label">法术伤害：</span>
+            <span>@e.MagAttack</span>
+            @if(e.StrengMagAttack > 0)
+            {
+                <span class="state"> + @e.StrengMagAttack</span>
+            }
+        </p>
+    }
+    @if (e.Physique > 0 || e.Physique < 0)
+    {
+        string plus = e.Physique > 0 ? "+" : "";
+        <p>            
+            <span>体格 @(plus)@(e.Physique)</span>
+            @if(e.StrengPhysique > 0)
+            {
+                <span class="state"> + @e.StrengPhysique</span>
+            }
+        </p>
+    }
+    @if (e.Dexterous > 0 || e.Dexterous < 0)
+    {
+        string plus = e.Dexterous > 0 ? "+" : "";
+        <p>            
+            <span>灵巧 @(plus)@(e.Dexterous)</span>
+            @if(e.StrengDexterous > 0)
+            {
+                <span class="state"> + @e.StrengDexterous</span>
+            }
+        </p>
+    }
+    @if (e.Spirit > 0 || e.Spirit < 0)
+    {
+        string plus = e.Spirit > 0 ? "+" : "";
+        <p>            
+            <span>灵力 @(plus)@(e.Spirit)</span>
+            @if(e.StrengSpirit > 0)
+            {
+                <span class="state"> + @e.StrengSpirit</span>
+            }
+        </p>
+    }
+    @if (e.Life > 0 || e.Life < 0)
+    {
+        string plus = e.Life > 0 ? "+" : "";
+        <p>            
+            <span>生命 @(plus)@(e.Life)</span>
+            @if(e.StrengLife > 0)
+            {
+                <span class="state"> + @e.StrengLife</span>
+            }
+        </p>
+    }
+    @if (e.Mana > 0 || e.Mana < 0)
+    {
+        string plus = e.Mana > 0 ? "+" : "";
+        <p>            
+            <span>法力 @(plus)@(e.Mana)</span>
+            @if(e.StrengMana > 0)
+            {
+                <span class="state"> + @e.StrengMana</span>
+            }
+        </p>
+    }
+    @if (e.HitRate > 0 || e.HitRate < 0)
+    {
+        string plus = e.HitRate > 0 ? "+" : "";
+        <p>            
+            <span>命中率 @(plus)@(e.HitRate * 100)%</span>            
+        </p>
+    }
+    @if (e.Evade > 0 || e.Evade < 0)
+    {
+        string plus = e.Evade > 0 ? "+" : "";
+        <p>            
+            <span>闪避 @(plus)@(e.Evade * 100)%</span>            
+        </p>
+    }
+    @if (e.Critical > 0 || e.Critical < 0)
+    {
+        string plus = e.Critical > 0 ? "+" : "";
+        <p>            
+            <span>暴击率 @(plus)@(e.Critical * 100)%</span>            
+        </p>
+    }
+    @if (e.CriDamage > 0 || e.CriDamage < 0)
+    {
+        string plus = e.CriDamage > 0 ? "+" : "";
+        <p>            
+            <span>暴击伤害 @(plus)@(e.CriDamage * 100)%</span>            
+        </p>
+    }    
+    @if (e.Defense > 0 || e.Defense < 0)
+    {
+        string plus = e.Defense > 0 ? "+" : "";
+        <p>            
+            <span>防御 @(plus)@(e.Defense)</span>
+            @if(e.StrengDefense > 0)
+            {
+                <span class="state"> + @e.StrengDefense</span>
+            }
+        </p>
+    }
+    @if (e.Speed > 0 || e.Speed < 0)
+    {
+        string plus = e.Speed > 0 ? "+" : "";
+        <p>            
+            <span>行动速度 @(plus)@(e.Speed)</span>            
+        </p>
+    }
+    @if (e.RealCoin > 0 || !string.IsNullOrEmpty(e.RealDesc))
+    {
+        <p class="divider"></p>  
+        if (e.RealCoin > 0)
+        {
+            <p>
+                <span class="equip-label">价格：</span>
+                <span class="physical">@(e.RealCoin) 铜币</span>        
+            </p>
+        }
+        if (!string.IsNullOrEmpty(e.RealDesc))
+        {
+            <p class="physical equip-des">@e.RealDesc</p>
+        }           
+    }    
+</div>

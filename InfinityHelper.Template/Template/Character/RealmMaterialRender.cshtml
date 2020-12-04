@@ -1,0 +1,44 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<RealmUpMaterial>
+@{
+    Layout = null;
+    RealmUpMaterial e = Model;
+}
+<p>
+    <span class="equip-label">突破等级要求：</span>
+    <span class="state">@e.RealmLevel</span>
+</p>
+<p>
+    <span class="equip-label">突破后等级上限：</span>
+    <span class="state">@e.RealmMaxLevel</span>
+</p>
+<p>
+    <span class="equip-label">突破后境界：</span>
+    <span class="set">@e.RealmName</span>
+</p>
+<p>
+    <span class="equip-label">突破消耗修真经验：</span>
+    <span class="state">@e.UpdateExp</span>
+</p>
+@if (!string.IsNullOrEmpty(e.MaterOneName))
+{
+    <p>
+        <span class="equip-label">@e.MaterOneName：</span>
+        <span>@e.MaterOneNum</span>
+    </p>    
+}
+@if (!string.IsNullOrEmpty(e.MaterTwoName))
+{
+    <p>
+        <span class="equip-label">@e.MaterTwoName：</span>
+        <span>@e.MaterTwoNum</span>
+    </p>    
+}
+@if (!string.IsNullOrEmpty(e.MaterThreeName))
+{
+    <p>
+        <span class="equip-label">@e.MaterThreeName：</span>
+        <span>@e.MaterThreeNum</span>
+    </p>    
+}

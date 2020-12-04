@@ -1,0 +1,20 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<Skill>
+@{
+    Layout = null;
+    Skill e = Model;
+}
+@if (e.IsPassive)
+{
+    <span class="label label-info">P</span>
+}
+else if (e.IsPhysical)
+{
+    <span class="label label-success">S</span>
+}
+else if (e.IsMagical)
+{
+    <span class="label label-warning">M</span>
+}
+<span data-id="@e.SkillId" class="skill-name">@e.SkillName</span>

@@ -1,0 +1,145 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Text;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<FilterModel>
+@{
+    var filterList = this.Model.FilterConfig.Filters;
+}
+@section head{   
+    <script type="text/javascript" src="~/Scripts/Config.js?v=20201114"></script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    保留规则列表
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-primary" href="#" role="button" data-toggle="modal" data-target="#modalConfig">新增</a> 
+                        <a class="btn btn-xs btn-warning" href="#" role="button" data-toggle="modal" data-target="#modalCopy">复制</a>
+                        <a class="btn btn-xs btn-default" href="/character/detail" role="button">返回</a>                        
+                    </div>
+                </div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="text-center">#</td>
+                            <td class="text-center">物品品质</td>
+                            <td class="text-center">物品类型</td>
+                            <td class="text-center">保留条件</td>
+                            <td width="50"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var index = 0; index < filterList.Count; index++)
+                        {
+                            var filter = filterList[index];
+                            string color = filter.Color == null ? "全部" : EnumUtil.GetDescription(filter.Color);
+                            string eType = filter.RealCategory == null ? "全部" : EnumUtil.GetDescription(filter.RealCategory);
+                            string className = filter.Color == null ? "base" : string.Format("c{0}", (int)filter.Color);
+                            <tr>
+                                <td class="text-center">@(index + 1)</td>
+                                <td class="text-center @(className)">@color</td>
+                                <td class="text-center">@eType</td>
+                                <td>
+                                    <div class="container-fluid">
+                                        @foreach (var mf in filter.Items)
+                                        {
+                                            string op = ">=";                                                                                         
+                                            <div class="col-sm-6 col-md-6"><span>【@mf.DisplayName】</span><span> @op </span><span>@mf.Value</span></div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <span data-id="@filter.Id" class="sr-only label label-danger config-delete">删除</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    &nbsp;
+                    <div class="pull-right">   
+                        <a class="btn btn-xs btn-danger config-clear" href="#" role="button">清空</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalConfig" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">保留规则</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="power" class="control-label">物品品质</label>
+                    <select id="power" name="power" class="form-control">
+                        <option value="">全部</option>
+                        @foreach (var p in EnumUtil.GetEnumItems(typeof(ItemColor)))
+                        {                            
+                            <option value="@p.Value">@p.Description</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="control-label">物品类型</label>
+                    <select id="type" name="type" class="form-control">
+                        <option value="">全部</option>
+                        @foreach (var p in EnumUtil.GetEnumItems(typeof(ItemCategory)))
+                        {
+                            if(p.Value == (int)ItemCategory.Material || p.Value == (int)ItemCategory.Item)
+                            {
+                                continue;
+                            }
+                            <option value="@p.Value">@p.Description</option>                            
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-xs config-magic-add">+ 条件</button>
+                <button type="button" class="btn btn-warning btn-xs config-magic-remove">- 条件</button>
+                <button type="button" class="btn btn-primary btn-xs config-apply">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="condition-template hidden">
+    <div class="form-group">
+        <label class="control-label">词缀效果</label>
+        <select class="form-control prefix">
+            @foreach (var p in ItemFilterHelper.EquipFilterDict)
+            {
+                <option value="@p.Key">@p.Value</option>
+            }
+        </select>
+    </div>    
+    <div class="form-group">
+        <label class="control-label">过滤值</label>
+        <input class="form-control min" type="text" placeholder="请输入过滤值">
+    </div>
+</div>
+<div class="modal fade" id="modalCopy" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">从玩家复制规则</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="charName" class="control-label">玩家名称</label>                    
+                    <input type="text" class="form-control" id="charName" name="charName" placeholder="请输入玩家名称">                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs config-copy-apply">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

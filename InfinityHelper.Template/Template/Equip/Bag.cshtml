@@ -1,0 +1,145 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<BagModel>
+@section head{   
+    <script type="text/javascript" src="~/Scripts/Equip.js?v=20201114"></script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    装备
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-warning" href="/equip/material" role="button">材料</a>
+                        <a class="btn btn-xs btn-default" href="/character/detail" role="button">返回</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @foreach(var e in Model.CharEquipList)
+                    {                        
+                        <div class="col-sm-6 col-md-3 equip-container">
+                            <p data-id="@e.RealId">
+                                <span>@e.TypeDec：</span>                            
+                                <span class="c@((int)e.Color) equip-name">【@(e.RealName)】</span>
+                                <span data-id="@e.RealId" class="sr-only label label-primary equip-off">卸下</span>   
+                            </p>
+                            <div class="equip-content">
+                                @Html.Partial("/Equip/EquipRender.cshtml", e)
+                            </div>                                       
+                        </div>
+                    }                    
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    背包：@(Model.BagItemList.Count)/@(Model.Character.PackageNum)
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-xs btn-default dropdown-toggle c@(Model.CurrentColor)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 @Model.CurrentColorName <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="physical" href="/equip/bag?type=@(Model.CurrentCategory)">全部</a></li>
+                                @foreach(var c in EnumUtil.GetEnumItems(typeof(ItemColor)))
+                                {
+                                    <li><a class="c@(c.Value)" href="/equip/bag?type=@(Model.CurrentCategory)&color=@c.Value">@c.Description</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 @Model.CurrentCategoryName <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="physical" href="/equip/bag?color=@(Model.CurrentColor)">全部</a></li>
+                                @foreach (var c in EnumUtil.GetEnumItems(typeof(ItemCategory)))
+                                {
+                                    if (c.Value == (int)ItemCategory.Item || c.Value == (int)ItemCategory.Material || c.Value == (int)ItemCategory.Skill)
+                                    {
+                                        continue;
+                                    }
+
+                                    <li><a class="physical" href="/equip/bag?type=@c.Value&color=@(Model.CurrentColor)">@c.Description</a></li>
+                                }
+                            </ul>
+                        </div>                                                
+                    </div>
+                </div>
+                <div class="panel-body bag-container">
+                    @foreach (var e in Model.BagItemList)
+                    {
+                        string num = string.Empty;
+                        if(e.RealCategory == ItemCategory.Material || e.RealCategory == ItemCategory.Item)
+                        {
+                            num = string.Format("* {0}", e.ItemNum);
+                        }
+
+                        <div class="col-xs-12 col-sm-6 col-md-3 equip-container">
+                            <p> 
+                                @if(e.Bind == 1)
+                                {
+                                    <span class="c@((int)e.Color) glyphicon glyphicon-lock" aria-hidden="true"></span>
+                                }
+                                else
+                                {
+                                     <span class="c@((int)e.Color) glyphicon glyphicon-empty" aria-hidden="true"></span>
+                                }
+                                <span data-bind="@e.Bind" data-id="@e.RealId" class="c@((int)e.Color) equip-name">【@(e.RealName)】@(num)</span> 
+                                @if(e.RealType == ItemType.Item)
+                                {
+                                    if (e.IsRequiredValid(this.Model.Character.Level))
+                                    {
+                                        <span data-id="@e.RealId" class="sr-only label label-primary equip-use">使用</span>
+                                    }
+                                }
+                                else if(e.RealType != ItemType.Material)
+                                {
+                                    if (e.IsRequiredValid(this.Model.Character.Level))
+                                    {
+                                        <span data-id="@e.RealId" class="sr-only label label-primary equip-on">装备</span>                                                                    
+                                    }
+                                    <span data-id="@e.RealId" class="sr-only label label-default" data-toggle="modal" data-target="#modalUpgrade">强化</span>
+                                }                                
+                                @if (e.Bind == 1)
+                                {
+                                    <span data-id="@e.RealId" class="sr-only label label-warning equip-unbind">解绑</span> 
+                                }
+                                else
+                                {
+                                    <span data-id="@e.RealId" class="sr-only label label-info equip-bind">绑定</span> 
+                                    <span data-id="@e.RealId" class="sr-only label label-danger equip-sell">出售</span>
+                                }                                                                                                      
+                            </p>
+                            <div class="equip-content">
+                                @Html.Partial("/Equip/EquipRender.cshtml", e)
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">
+                    <input class="panel-filter hidden-xs" id="panel-filter-mybag" placeholder="过滤匹配" />
+                    <span class="visible-*-inline">&nbsp;</span>
+                    <div class="pull-right">                                                
+                        <a class="btn btn-xs btn-danger equip-sellall" href="#" role="button">出售全部</a>
+                    </div>
+                </div>
+            </div>              
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalUpgrade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">装备强化</span>                                
+            </div>
+            <div class="modal-body"> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs equip-upgrade">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

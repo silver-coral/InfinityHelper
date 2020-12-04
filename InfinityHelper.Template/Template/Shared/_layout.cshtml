@@ -1,0 +1,142 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Text;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<InfinityServerModel>
+@{ 
+    Layout = null;    
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YWZJ Proxy</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font.css" rel="stylesheet" />
+    <link href="~/Content/page3.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Common.js?v=20201115"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Particles.js?v=20190627"></script>    
+    <script type="text/javascript" src="~/Scripts/Popup.js?v=20190627"></script>
+    @RenderSection("head", false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("body").particle({ number: 20, fillStyle: "#eee", shadowColor: "#aaa", stokeStyle: "#bbb" });
+
+            $(".excode-apply").on("click", function () {
+                var code = $("#excode").val();
+                $.postJson("/api/exchangecode?code=" + code);
+            });
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">                
+                <a class="navbar-brand" href="@Model.Site.DefaultPath">YWZJ Proxy</a>
+                <button class="navbar-toggle collapsed" aria-expanded="false" aria-controls="navbar" type="button" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar" aria-expanded="false">
+                <ul class="nav navbar-nav navbar-right">   
+                    @if (!string.IsNullOrEmpty(this.Model.Site.CurrentCharId))
+                    {
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" role="button" aria-expanded="false" aria-haspopup="true" href="#" data-toggle="dropdown">设置<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="base" href="/config/filter">物品过滤</a></li>                            
+                            </ul>
+                        </li>                                        
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" role="button" aria-expanded="false" aria-haspopup="true" href="#" data-toggle="dropdown">帮助<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="base" href="/help/mapdrop">地图掉落</a></li>                            
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" role="button" aria-expanded="false" aria-haspopup="true" href="#" data-toggle="dropdown">关于<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="base" href="/home/chars">等级榜</a></li>  
+                                <li><a class="base" href="/home/chars2">效率榜</a></li> 
+                                <li><a class="base" href="#" data-toggle="modal" data-target="#modalCode" >兑换码</a></li>
+                                <li><a class="base" href="/home/log">日志</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/home/login">退出</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/home/log">日志</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br />
+    @RenderBody()
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted text-center">
+                <span>© 2020 YWZJ | All Rights Reserved</span>
+            </p>
+        </div>
+    </footer>
+    <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" style="z-index:100001;">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content model-inverse">
+                <div class="modal-header">
+                    <span class="modal-title">警告</span>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" style="z-index:100000;">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content model-inverse">
+                <div class="modal-header">
+                    <span class="modal-title">确认</span>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-xs confirm-ok">确定</button>
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalCode" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content model-inverse">
+                <div class="modal-header">
+                    <span class="modal-title">兑换码</span>                                
+                </div>
+                <div class="modal-body">                
+                    <div class="form-group">
+                        <label for="excode" class="control-label">兑换码</label>
+                        <input type="text" id="excode" name="excode" class="form-control" />
+                    </div>                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-xs excode-apply">提交</button>
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

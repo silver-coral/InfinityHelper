@@ -1,0 +1,35 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<EquipUpMaterial>
+@{
+    Layout = null;
+    EquipUpMaterial e = Model;
+}
+@if (!string.IsNullOrEmpty(e.MaterOneName))
+{
+    <p>
+        <span class="equip-label">@e.MaterOneName：</span>
+        <span>@e.MaterOneNum</span>
+    </p>    
+}
+@if (!string.IsNullOrEmpty(e.MaterTwoName))
+{
+    <p>
+        <span class="equip-label">@e.MaterTwoName：</span>
+        <span>@e.MaterTwoNum</span>
+    </p>    
+}
+@if(e.Coin > 0)
+{
+    <p>
+        <span class="equip-label">价格：</span>
+        @if(e.ConinType == 0)
+        {
+            <span class="physical">@(e.Coin) @(e.PriceTypeStr)</span>
+        }
+        else
+        {
+            <span class="lightning">@(e.Coin) @(e.PriceTypeStr)</span>
+        } 
+    </p>
+}

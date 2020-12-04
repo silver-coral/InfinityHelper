@@ -1,0 +1,39 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<BattleResult>
+@{
+    Layout = null;
+}
+<div class="turn">
+    @if (Model.Success == true)
+    {
+        <div>战斗胜利！</div>
+    }
+    else
+    {
+        <div>战斗失败……</div>
+    }
+    @if (Model.DropExp > 0 || Model.GameItemsList != null)
+    {
+        <div class="battle-trophy">
+            <span>获得</span>
+            @if (Model.DropExp > 0)
+            {
+                @:：<span class="state">@(Model.DropExp)</span>经验
+            }            
+            @if ( Model.GameItemsList != null)
+            {
+                foreach (var e in Model.GameItemsList)
+                {
+                    @:，
+                    <span>
+                        <span class="c@((int)e.Color) equip-name">【@(e.RealName)】</span>
+                    </span>
+                    <div class="equip-content">
+                        @Html.Partial("/Equip/EquipRender.cshtml", e)
+                    </div>
+                }
+            }            
+        </div>
+    }
+</div>

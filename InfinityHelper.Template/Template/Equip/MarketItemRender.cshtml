@@ -1,0 +1,35 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<MarketItem>
+@{
+    Layout = null;
+    MarketItem e = Model;
+}
+<div class="equip">
+    <p>@e.MarketName</p>
+    <p>
+        <span class="equip-label">类型：</span>
+        <span>@e.MarketType</span>
+    </p>
+    <p>
+        <span class="equip-label">最低等级：</span>
+        <span>@e.MarketLevel</span>
+    </p>
+    <p>
+        <span class="equip-label">剩余数量：</span>
+        <span>@e.MarketNum</span>
+    </p>
+    <p class="divider"></p>  
+    <p>
+        <span class="equip-label">价格：</span>
+        @if(e.PriceType == 0)
+        {
+            <span class="base">@(e.MarketPrice) @(e.PriceTypeStr)</span>
+        }
+        else
+        {
+            <span class="lightning">@(e.MarketPrice) @(e.PriceTypeStr)</span>
+        }                
+    </p>
+    <p class="physical equip-des">@e.MarketDec</p>
+</div>

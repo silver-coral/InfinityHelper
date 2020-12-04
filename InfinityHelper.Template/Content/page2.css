@@ -1,0 +1,188 @@
+﻿/*全局*/
+/*html { text-shadow: 1px 1px 3px #999;}*/
+body { font-family: Arial,Helvetica,Sans-Serif; background-color: #fdfcf8; font-size: 14px; line-height: 150%; color: #555; padding-top: 50px; padding-bottom: 30px; overflow-x: hidden; }
+.bg-canvas { position: fixed; top: 0px; left: 0px; z-index: -1; background-color: white; }
+.capture-canvas { position: fixed; top: 0px; left: 0px; z-index: 1000; background-color: white; }
+.logo-canvas { float: left; height: 50px; width: 20px; }
+.border { border-left: 1px solid #ccc; border-right: 1px solid #ccc; padding: 5px; margin: 5px; }
+.part { margin: 5px 10px; float: left; }
+.half-float { width: 50%; float: left; }
+.error { color: red !important; margin-top: 10px; font-weight: 400; }
+.border-right { border-right: dashed 1px #ccc; }
+body::-webkit-scrollbar { width: 2px; height: 2px; background-color: #ccc; }
+body::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.3); border-radius: 1px; background-color: #ccc; }
+body::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.3); background-color: #fff; }
+.x-hidden { overflow-x: hidden; }
+.label-magic { background-color: #ff7300; }
+.form-validation .form-control { width: 200px; display: inline; }
+.form-validation img { margin-top: -2px; border-radius: 4px; }
+.glyphicon-empty { width: 12px; height: 12px; }
+.margin-right10px { margin-right: 10px; }
+.visible-xsm { display: none !important; }
+
+@media (max-width: 639px) {
+    .hidden-xsm { display: none !important; }
+    .visible-xsm { display: block !important; }
+}
+
+/*扩展*/
+
+.c1 { color: rgb(0, 0, 0) !important; /*text-shadow: 0px 0px 1px #AAA;*/ }
+.c2 { color: rgb(197, 197, 47) !important; }
+.c3 { color: rgb(4, 156, 4) !important; }
+.c4 { color: rgb(0, 90, 255) !important; }
+.c5 { color: rgb(255, 0, 224) !important; }
+.c6 { color: rgb(255, 0, 0) !important; }
+
+/*改*/
+.text-muted { color: #555; }
+.navbar-inverse { background-color: #f5f5f5; border-color: #ccc; }
+.navbar-inverse .navbar-brand { font-size: 20px; color: #555; }
+.navbar-inverse .navbar-brand:hover { color: black; }
+.navbar-inverse .navbar-nav > li > a { color: #555; }
+.navbar-inverse .navbar-nav > li > a:hover { background-color: #a7a7a7; }
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover { background-color: #a7a7a7; color: white; }
+.navbar-inverse .navbar-toggle { border-color: #ccc; }
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus { background-color: transparent; border-color: #ccc; }
+.navbar-inverse .navbar-toggle .icon-bar { background-color: #ccc; }
+.navbar-inverse .navbar-collapse,
+.navbar-inverse .navbar-form { border-color: #ccc; }
+
+.label-default { background-color: #9e9e9e; }
+.row { margin-left: -5px; margin-right: -5px; }
+.panel-inverse { background-color: #f5f5f5; border-color: #ccc; border-radius: 2px; }
+.panel-inverse > .panel-heading { background-color: #f5f5f5; border-color: #ccc; }
+.panel-inverse > .panel-footer { background-color: #f5f5f5; border-color: #ccc; }
+.footer { position: fixed; bottom: 0; width: 100%; height: 30px; background-color: #f5f5f5; }
+.footer .text-muted { margin: 5px 0; }
+.progress { margin-top: 5px; margin-bottom: 5px; background-color: #ccc; }
+.panel { background-color: transparent; margin-bottom: 10px; }
+.progress-bar-life { background-color: #f75d58; }
+.progress-bar-mana { background-color: #7076bd; }
+.progress-bar-exp { background-color: orange; }
+.label { padding: 0.2em 0.2em 0.1em; }
+.btn-base { background-color: white; color: #555; }
+.btn-magical { background-color: #4850b8; color: #fff; }
+.btn-rare { background-color: #aaaa03; color: #555; }
+.btn-unique { background-color: #ff8000; color: #555; }
+.btn-artifact { background-color: darkviolet; color: white; }
+.btn-set { background-color: #00c400; color: #555; }
+.popover { background-color: white; border-color: #ccc; border-radius: 0; min-width: 100px; }
+.badge { background-color: #d9534f; }
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 { position: relative; min-height: 1px; padding-left: 5px; padding-right: 5px; }
+.panel .col-xs-1, .panel .col-sm-1, .panel .col-md-1, .panel .col-lg-1,
+.panel .col-xs-2, .panel .col-sm-2, .panel .col-md-2, .panel .col-lg-2,
+.panel .col-xs-3, .panel .col-sm-3, .panel .col-md-3, .panel .col-lg-3,
+.panel .col-xs-4, .panel .col-sm-4, .panel .col-md-4, .panel .col-lg-4,
+.panel .col-xs-5, .panel .col-sm-5, .panel .col-md-5, .panel .col-lg-5,
+.panel .col-xs-6, .panel .col-sm-6, .panel .col-md-6, .panel .col-lg-6,
+.panel .col-xs-7, .panel .col-sm-7, .panel .col-md-7, .panel .col-lg-7,
+.panel .col-xs-8, .panel .col-sm-8, .panel .col-md-8, .panel .col-lg-8,
+.panel .col-xs-9, .panel .col-sm-9, .panel .col-md-9, .panel .col-lg-9,
+.panel .col-xs-10, .panel .col-sm-10, .panel .col-md-10, .panel .col-lg-10,
+.panel .col-xs-11, .panel .col-sm-11, .panel .col-md-11, .panel .col-lg-11,
+.panel .col-xs-12, .panel .col-sm-12, .panel .col-md-12, .panel .col-lg-12 { position: relative; min-height: 1px; padding-left: 2px; padding-right: 2px; }
+.model-inverse { background-color: white; border-radius: 0; }
+.model-inverse > .modal-header { background-color: #f5f5f5; border-color: #ccc; padding: 10px 15px; }
+.model-inverse > .modal-footer { background-color: #f5f5f5; border-color: #ccc; padding: 10px 15px; }
+.dropdown-menu { background-color: #ccc; border: none; border-radius: 0; min-width: 50px; }
+.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover { background-color: #a7a7a7; color: white; cursor: pointer; }
+.table > tbody > tr > td { vertical-align: middle; }
+.table > tbody > tr:hover .sr-only { position: inherit; cursor: pointer; }
+.panel-footer .panel-filter { height: 22px; background: white; border: solid 1px #ccc; width: 30%; text-indent: 3px; }
+.sr-container:hover > .sr-only { position: inherit; cursor: pointer; }
+.media-left { position: relative; }
+.media-left .uploader { left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; opacity: 0; filter: alpha(opacity=0); cursor: pointer; }
+.media-left .uploader > input { width: 100%; height: 100%; cursor: pointer; }
+.img-thumbnail { padding: 0; }
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th { border-bottom: 1px solid #ccc; }
+.panel > .table > tbody > tr > td, .panel > .table > tbody > tr > th, .panel > .table > tfoot > tr > td, .panel > .table > tfoot > tr > th, .panel > .table > thead > tr > td, .panel > .table > thead > tr > th { border-bottom: none; }
+.panel-body > .row { margin-left: 0; margin-right: 0; }
+.input-group-addon { padding: 6px; }
+.glyphicon { font-size: 12px; }
+
+/*Form*/
+.center-form { width: 300px; min-height: 300px; position: absolute; top: 50%; left: 50%; margin-left: -150px; margin-top: -220px; }
+.center-form h2 { text-align: center; }
+
+/*角色*/
+.attr-add, .attr-add10 { cursor: pointer; }
+.group-content { display: none; }
+
+/*装备*/
+.equip > p { color: #4850b8; }
+.equip p, .equip-magic p { margin-bottom: 3px !important; margin-top: 0 !important; }
+.equip .equip-label { color: #555; }
+.base { color: black !important; }
+.slot { color: #afafaf !important; }
+.magical { color: #4850b8 !important; }
+.rare { color: #aaaa03 !important; }
+.unique { color: #ff8000 !important; }
+.set { color: #00c400 !important; }
+.artifact { color: darkviolet !important; }
+.equip-content { display: none; }
+.equip-name { cursor: pointer; }
+.equip-container > p { border: 1px solid transparent; }
+.equip-container > p:hover > .sr-only { position: inherit; cursor: pointer; }
+.equip-container .selected { border: 1px solid #5cb85c; background-color: #f5f5f5; }
+.require { color: red !important; }
+.equip .divider { margin: 9px 0; overflow: hidden; border-bottom: 1px solid #e5e5e5; }
+
+/*技能*/
+.skill { color: #4850b8 !important; }
+.damage { color: red !important; }
+.heal { color: #00c400 !important; }
+.state { color: #ff9900 !important; }
+.skill-container .popover { min-width: 250px; }
+.skill-container .enabled { border: 1px solid #a7a7a7; padding: 1px 2px; }
+.skill-container .disabled { border: 1px solid red; padding: 1px 2px; }
+.skill-container .empty { border-bottom: 1px dashed #a7a7a7; transform: translateY(12px); }
+.skill-editor .selected { border: 1px solid #5cb85c; padding: 1px 2px; background-color: #f5f5f5; }
+.skill-content { display: none; }
+.skill-name { cursor: pointer; }
+.skill-container > p:hover > .sr-only { position: inherit; cursor: pointer; }
+.skill-name:hover > .sr-only { position: inherit; cursor: pointer; }
+.skill-box > p { margin-bottom: 3px !important; margin-top: 0 !important; }
+
+/*伤害类型*/
+.fire { color: red !important; }
+.cold { color: blue !important; }
+.poison { color: #00c400 !important; }
+.lightning { color: #ff9900 !important; }
+.physical { color: black !important; }
+.magic { color: darkviolet !important; }
+
+/*战斗*/
+.battle-char { padding-left: 2px; padding-right: 10px; }
+.battle-char > .battle-char-info { position: relative; overflow: hidden; }
+.battle-char .battle-char-name { position: absolute; }
+.turn { display: none; }
+.turn > div { margin: 2px 0; }
+.name { color: #985f15; }
+.turn-data { display: none; }
+.visually-hidden { border: none; margin-bottom: 0px; }
+.battle-data { transition: height 1s ease; height: 0px; overflow: hidden; }
+.super { color: #ff8000 !important; }
+.boss { color: darkviolet !important; }
+
+/*地图*/
+.char-container > p { cursor: pointer; }
+.char-container > p:hover > .sr-only { position: inherit; cursor: pointer; }
+.dungeon-container { position: relative; padding: 0; }
+.dungeon-container .block { display: block; float: left; width: 5%; height: 42px; color: white; font-size: 30px; text-align: center; line-height: 42px; box-sizing: border-box; background-repeat: no-repeat; background-size: contain; }
+.dungeon-container .top { border-top: solid 1px #ccc; }
+.dungeon-container .left { border-left: solid 1px #ccc; }
+.dungeon-container .mask { background-color: transparent; }
+.dungeon-container .public { background-color: #f5f5f5; }
+.dungeon-container .current { background-image: url("images/char3.png"); }
+.dungeon-container .normal { background-image: url("images/normal3.png"); }
+.dungeon-container .rare { background-image: url("images/rare3.png"); }
+.dungeon-container .super { background-image: url("images/super3.png"); }
+.dungeon-container .boss { background-image: url("images/boss3.png"); background-color: #f5f5f5; }
+.dungeon-container .monster { cursor: pointer; }
+.dungeon-container .dungeon-layer { width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; display: none; z-index: 1; }
+
+/*消息*/
+.notice-content { cursor: pointer; }
+.notice-content:hover > .sr-only { position: inherit; cursor: pointer; }

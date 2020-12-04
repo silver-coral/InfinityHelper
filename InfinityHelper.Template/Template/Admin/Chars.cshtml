@@ -1,0 +1,56 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Text;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<InfinityServerModel>
+@{
+    var chars = CharacterCache.GetAllCharsByLevel();
+}
+@section head{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".progress-bar").css("width", "100%");
+            $(".progress-bar-exp").css("width", function (i, p) {
+                return $(this).data("percent");
+            });
+
+            $(".char-detail").on("click", function () {
+                var id = $(this).data("id");
+                window.location.href = "/character/detail?id=" + id;
+            });
+        });
+    </script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading"> 
+                    人数：@(chars.Count)
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-default" href="/character/detail" role="button">返回</a>                        
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        @foreach (var c in chars)
+                        {
+                            var charClass = c.IsGuaji ? "name" : "slot";
+                            <div class="col-sm-4 col-md-3 char-container">
+                                <p class="sr-container">
+                                    <span class="label label-default">Lv@(c.Level)</span>
+                                    <span class="@(charClass) group-name">@(c.Name)</span>
+                                    <span class="state pull-right">@c.ExpPercent%</span>
+                                    <span data-id="@c.Id" class="sr-only label label-info char-detail">查看</span>
+                                </p>
+                                <div class="group-content">
+                                    @Html.Partial("/Character/CharRender.cshtml", c)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>                              
+            </div>
+        </div>
+    </div>
+</div>

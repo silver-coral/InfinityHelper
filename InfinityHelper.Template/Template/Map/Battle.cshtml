@@ -1,0 +1,61 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<BattleModel>
+@{ 
+    
+}
+@section head{
+    <script type="text/javascript" src="/Scripts/Battle.js?v=20190114"></script>    
+    <script type="text/javascript">            
+        $(document).ready(function(){
+            $(".turn").battle({
+                interval:500,
+                guaji:false
+            });
+        });
+    </script>
+}
+@if(Model.Battle != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        战斗双方
+                        <div class="pull-right">
+                            @if(Model.Count > 1)
+                            {
+                                if(Model.Index > 0)
+                                {
+                                    <a class="btn btn-xs btn-default" href="/map/battle?i=@(Model.Index - 1)" role="button">上一场</a> 
+                                }
+                                if(Model.Index < Model.Count - 1)
+                                {
+                                    <a class="btn btn-xs btn-default" href="/map/battle?i=@(Model.Index + 1)" role="button">下一场</a> 
+                                }
+                            }
+                            <a class="btn btn-xs btn-default" href="/character/detail" role="button">返回</a>                         
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        @Html.Partial("/Map/BattleCharListRender.cshtml", Model.Battle)
+                    </div>                
+                </div>
+                <div class="panel panel-inverse battle-data visually-hidden">                        
+                    @Html.Partial("/Map/BattleDataRender.cshtml", Model.Battle)
+                </div>
+                <div class="panel panel-inverse">
+                    <div class="panel-body">
+                        @Html.Partial("/Map/BattleResultRender.cshtml", Model.Battle)
+                        @for (int i = Model.Battle.CombatInfo.Count - 1; i >= 0; i--)
+                        {
+                            var t = Model.Battle.CombatInfo[i];
+                            @Html.Partial("/Map/BattleTurnRender.cshtml", t);
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

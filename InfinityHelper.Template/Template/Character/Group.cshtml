@@ -1,0 +1,128 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<GroupModel>
+@section head{
+    <script type="text/javascript" src="~/Scripts/Group.js?v=20201117"></script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">                    
+                    @if (Model.HasGroup)
+                    {
+                        <span class="name">@Model.ArmyGroup.ArmyName</span>
+                        <div class="pull-right">
+                            @if (Model.IsCaption)
+                            {
+                                <a class="btn btn-xs btn-danger group-leave" href="#" role="button">解散</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-xs btn-danger group-leave" href="#" role="button">退出</a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="name">&nbsp;</span>
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-primary" href="#" role="button" data-toggle="modal" data-target="#modalCreateGroup">创建</a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <div class="char-container">
+                        @if (Model.HasGroup)
+                        {
+                            foreach (var ac in Model.ArmyGroup.CharaInfoVoList)
+                            {
+                                string className = ac.IsCaption ? "label-warning" : "label-default";
+                                <p class="sr-container">
+                                    <span class="label @(className)">Lv@(ac.CharaLevel)</span>
+                                    <span class="name">@(ac.CharaName)</span>
+                                    @*<span class="label label-info">编号@(ac.CharaNo)</span>*@
+                                    @if (Model.IsCaption && ac.CharaNo != Model.Character.AccountId)
+                                    {
+                                        <span class="sr-only label label-danger group-remove" data-no="@ac.CharaNo">移除</span>
+                                    }
+                                </p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    所有队伍
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-default" href="/Character/Detail" role="button">返回</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <td class="text-center">#</td>
+                                <td class="text-center">队伍</td>
+                                <td class="text-center">队长</td>
+                                <td class="text-center">剩余位置</td>
+                                <td width="100"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ArmyGroupList != null)
+                            {
+                                for (var index = 0; index < Model.ArmyGroupList.Count; index++)
+                                {
+                                    var e = Model.ArmyGroupList[index];
+                                    if (e == null) { continue; }
+
+                                    bool isMyGroup = Model.HasGroup && Model.ArmyGroup.ArmyId == e.ArmyId;
+
+                                    <tr>
+                                        <td class="text-center">@(index + 1)</td>
+                                        <td class="text-center">@e.ArmyName</td>
+                                        <td class="text-center">@e.CaptainName</td>
+                                        <td class="text-center">@e.ArmyNum</td>
+                                        <td>
+                                            @if (isMyGroup)
+                                            {
+                                                @:我的队伍
+                                            }
+                                            else if(!Model.HasGroup && e.ArmyNum > 0)
+                                            {
+                                                <span data-id="@e.ArmyId" class="sr-only label label-danger group-join">加入</span>
+                                            }                                            
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalCreateGroup" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">创建队伍</span>                                
+            </div>
+            <div class="modal-body">                
+                <div class="form-group">
+                    <label for="aname" class="control-label">队伍名称</label>
+                    <input type="text" id="aname" name="aname" class="form-control" />
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs group-create">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<BattleResult>
+@{ 
+    Layout = null;
+}
+@section head{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+        });
+    </script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    战斗双方
+                    <div class="pull-right">
+                         <a class="btn btn-xs btn-default" href="/map/guaji" role="button">返回</a>                         
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @Html.Partial("/Map/BattleCharListRender.cshtml", Model)
+                </div>                
+            </div>
+            <div class="panel panel-inverse battle-data visually-hidden">                        
+                @Html.Partial("/Map/BattleDataRender.cshtml", Model)
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-body">
+                    @Html.Partial("/Map/BattleResultRender.cshtml", Model)
+                    @for (int i = Model.CombatInfo.Count - 1; i >= 0; i--)
+                    {
+                        var t = Model.CombatInfo[i];
+                        @Html.Partial("/Map/BattleTurnRender.cshtml", t);
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

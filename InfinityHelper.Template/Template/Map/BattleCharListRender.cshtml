@@ -1,0 +1,44 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<BattleResult>
+@{ 
+    Layout = null;
+}
+<div class="col-xs-6 col-sm-6 col-md-6 battle-left">
+    @foreach (var c in Model.LeftList)
+    {
+        var hpPercent = Math.Round(Model.LifeBefore[c.Id] * 100m / c.Life, 2);
+
+        <div class="col-md-6 battle-char" id="char_@c.Id">
+            <div class="battle-char-info"><span class="label label-default">Lv@(c.Level)</span><span class="battle-char-name name">&nbsp;@c.Name</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-life" style="width:@(hpPercent)%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <span>@(Model.LifeBefore[c.Id])/@(c.Life)</span>
+                </div>
+            </div>
+            @*<div class="progress">
+                <div class="progress-bar progress-bar-mana" style="width:100%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <span>@(Model.Mana)/@(Model.Mana)</span>
+                </div>
+            </div>*@
+        </div>
+    }
+</div>
+<div class="col-xs-6 col-sm-6 col-md-6 battle-right">
+    @foreach (var c in Model.RightList)
+    {
+        <div class="col-md-6 battle-char" id="char_@c.Id">
+            <div class="battle-char-info"><span class="label label-default">Lv@(c.Level)</span><span class="battle-char-name name">&nbsp;@c.Name</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-life" style="width:100%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <span>@(c.Life)/@(c.Life)</span>
+                </div>
+            </div>
+            @*<div class="progress">
+                <div class="progress-bar progress-bar-mana" style="width:100%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <span>@(Model.Mana)/@(Model.Mana)</span>
+                </div>
+            </div>*@
+        </div>
+    }
+</div>

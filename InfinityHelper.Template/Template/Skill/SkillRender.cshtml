@@ -1,0 +1,31 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<Skill>
+@{
+    Layout = null;
+    Skill e = Model;
+}
+<div class="skill-box">    
+    <p>        
+        <span class="skill">@e.SkillName</span>
+    </p>
+    @if (e.ConMana > 0)
+    {
+        <p>
+            <span>技能耗蓝：<span class="magical">@e.ConMana</span></span>
+        </p>
+    }
+    @if (e.ConsumeCoin > 0)
+    {
+        <p>
+            <span>升级金币：<span class="lightning">@e.ConsumeCoin</span></span>
+        </p>
+    }
+    <p>@e.SkillDesc</p>
+    @if (!string.IsNullOrEmpty(e.SkillNextDesc))
+    {
+        <br />          
+        <p>下一级</p>    
+        <p>@e.SkillNextDesc</p>
+    }
+</div>

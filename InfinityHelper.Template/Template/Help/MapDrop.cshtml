@@ -1,0 +1,95 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Text;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<MapDropModel>
+@{
+}
+
+<div class="container">
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            地图
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Model.CurrentMapName <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="physical" href="/help/mapdrop?type=@(Model.CurrentCategory)">全部</a></li>
+                        @foreach(var c in Model.MapList)
+                        {
+                            <li><a class="physical" href="/help/mapdrop?type=@(Model.CurrentCategory)&mid=@c.MapId">@c.MapName</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Model.CurrentCategoryName <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="physical" href="/help/mapdrop?mid=@(Model.CurrentMapId)">全部</a></li>
+                        @foreach (var c in EnumUtil.GetEnumItems(typeof(ItemCategory)))
+                        {
+                            if (c.Value == (int)ItemCategory.Item)
+                            {
+                                continue;
+                            }
+
+                            <li><a class="physical" href="/help/mapdrop?type=@c.Value&mid=@(Model.CurrentMapId)">@c.Description</a></li>
+                        }
+                    </ul>
+                </div>                                                
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        @foreach(var map in Model.MapList)
+        {
+            if(!string.IsNullOrEmpty(Model.CurrentMapId) && map.MapId != Model.CurrentMapId)
+            {
+                continue;
+            }
+
+            <div class="panel-heading">
+                @map.MapName（@(map.MapMinLv)~@(map.MapMaxLv)）          
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="text-center">#</td>
+                            <td class="text-center">类型</td>                                    
+                            <td class="text-center">等级</td>
+                            <td class="text-center">名称</td>
+                            <td class="text-center">掉率</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(map.ItemsVoList != null)
+                        {
+                            for (var index = 0; index < map.ItemList.Count; index++)
+                            {
+                                var e = map.ItemList[index];
+                                if(e == null) { continue; }
+
+                                if(Model.CurrentCategory != null && e.RealCategory != (ItemCategory)Model.CurrentCategory)
+                                {
+                                    continue;
+                                }
+
+                                <tr>
+                                    <td class="text-center">@(index + 1)</td>
+                                    <td class="text-center">@e.TypeDec</td>                                        
+                                    <td class="text-center">@e.Level</td>
+                                    <td class="text-center c@((int?)e.Color)">@e.ItemName</td>  
+                                    <td class="text-center">@(e.DropPercent)%</td>
+                                </tr>
+                            }
+                        }                        
+                    </tbody>
+                </table>
+            </div>
+        }        
+    </div>
+</div>

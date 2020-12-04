@@ -1,0 +1,58 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<IndexModel>
+@section head{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".progress-bar").css("width", "100%");
+            $(".progress-bar-exp").css("width", function (i, p) {
+                return $(this).data("percent");
+            });
+        });
+    </script>
+}
+<div class="container">
+    <div class="row">
+        @foreach (Character c in Model.CharacterList)
+        {
+            <div class="col-sm-4 col-md-4">
+                <div class="panel panel-inverse char-container" data-id="@c.Id">
+                    <div class="panel-heading">
+                        <span>@Html.Raw(c.Name)</span>
+                        @if (c.IsGuaji)
+                        {
+                            <span class="label label-info">挂机</span>
+                        }
+                        <div class="pull-right">
+                            <a data-id="@c.Id" class="btn btn-xs btn-default" href="/character/detail" role="button">选择</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="media-left">
+                            <img class="media-object img-circle img-thumbnail" style="width:100px;height:100px;" src="https://i.loli.net/2017/08/21/599a521472424.jpg" alt="..." />
+                        </div>
+                        <div class="media-body">
+                            <div><span class="label label-default">Lv@(c.Level)</span></div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-life" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>Hp：@c.Health</span>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-mana" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>Mp：@c.Mana</span>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-exp" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-percent="@(c.ExpPercent)%">
+                                    <span>@(c.ExpPercent)%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,70 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<InfinityServerModel>
+@{ 
+    int count = Model.Site.Dynamic.BattleLevelTotalCount;
+    decimal epm = Model.Site.Dynamic.EPM;   
+}
+@section head{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var connection = $.hubConnection();
+            var connectionHubProxy = connection.createHubProxy('userManagerHub');
+            connectionHubProxy.on('alert', function (msg) { alert(msg); });
+            connectionHubProxy.on("battleLog", function (data) {
+                var content = $("<div></div>");
+                var bt = JSON.tryParse(data);
+                if (bt == false) {
+                    content.append($("<span class='error'></span>").append(data));
+                }
+                else {
+                    content.append($("<span class='name'></span>").append(bt.CharName));
+                    if (bt.Success) {
+                        content.append("战斗<span class='physical'>胜利</span>");
+                    }
+                    else {
+                        content.append("战斗<span class='error'>失败</span>");
+                    }
+                    if (bt.DropExp > 0) {
+                        content.append("，获取经验");
+                        content.append($("<span class='state'></span>").append(bt.DropExp));
+                    }
+                    if (bt.GameItemsList != null) {
+                        $.each(bt.GameItemsList, function (i, p) {
+                            content.append("，");
+                            content.append($("<span class='c" + p.Color + "'></span>").append("【" + p.RealName + "】"));
+                        });
+                    }
+                    content.append("，耗时" + bt.WaitSecond + "秒……");
+                    $(".panel-body").prepend(content);
+
+                    $("#bCount").text(bt.TotalCount);
+                    $("#bEPM").text(bt.EPM);
+                }
+            });
+            connection.start();
+        });
+    </script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    离线挂机服务
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-info" href="/Map/Battle" role="button">实时战况</a>                                              
+                        <a class="btn btn-xs btn-default" href="/Character/Detail" role="button">返回</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                </div>
+                <div class="panel-footer">
+                    总战斗<span id="bCount" class="state">@(count)</span>次，平均效率<span id="bEPM" class="state">@(epm)</span>/分钟
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

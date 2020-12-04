@@ -1,0 +1,86 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<SkillBagModel>
+@section head{
+    <script type="text/javascript" src="~/Scripts/Skill.js?v=20201105"></script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    技能
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-default" href="/character/detail" role="button">返回</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <p class="col-xs-12 col-sm-12 col-md-12" ><span class="label label-default">主动技能</span></p>
+                    @foreach (var s in Model.SkillList)
+                    {
+                        <p class="col-xs-6 col-sm-4 col-md-3 sr-container">
+                            @Html.Partial("/Skill/SkillNameRender.cshtml", s)
+                            <span data-id="@s.SkillId" data-type="@((int)s.SkillType)" class="sr-only label label-primary skill-off">卸下</span>
+                        </p>
+                        <div class="skill-content">
+                            @Html.Partial("/Skill/SkillRender.cshtml", s)
+                        </div>
+                    }
+                    <p class="col-xs-12 col-sm-12 col-md-12" ><span class="label label-default">被动技能</span></p>
+                    @foreach (var s in Model.PassiveSkillList)
+                    {
+                        <p class="col-xs-6 col-sm-4 col-md-3 sr-container">
+                            @Html.Partial("/Skill/SkillNameRender.cshtml", s)
+                            <span data-id="@s.SkillId" data-type="@((int)s.SkillType)" class="sr-only label label-primary skill-off">卸下</span>
+                        </p>
+                        <div class="skill-content">
+                            @Html.Partial("/Skill/SkillRender.cshtml", s)
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    技能仓库：@(Model.BagSkillList.Count)/@(Model.BagSkillList.Count)
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 @Model.CurrentTypeName <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="physical" href="/skill/bag">全部</a></li>
+                                @foreach(var c in EnumUtil.GetEnumItems(typeof(SkillType)))
+                                {
+                                    <li><a href="/skill/bag?type=@c.Value">@c.Description</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @foreach (var e in Model.BagSkillList)
+                    {
+                        <div class="col-xs-12 col-sm-6 col-md-3 skill-container">
+                            <p>
+                                @Html.Partial("/Skill/SkillNameRender.cshtml", e)
+                                <span data-id="@e.SkillId" data-type="@((int)e.SkillType)" class="sr-only label label-primary skill-on">装备</span>
+                                @if(e.ConsumeCoin > 0 && Model.Site.CurrentChar.Coin >= e.ConsumeCoin)
+                                {
+                                    <span data-id="@e.SkillId" class="sr-only label label-warning skill-upgrade">升级</span>
+                                }                                
+                            </p>
+                            <div class="skill-content">
+                                @Html.Partial("/Skill/SkillRender.cshtml", e)
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">
+                    <input class="panel-filter hidden-xs" id="panel-filter-mybag" placeholder="过滤匹配" />
+                    <span class="visible-*-inline">&nbsp;</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

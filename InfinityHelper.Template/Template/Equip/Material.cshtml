@@ -1,0 +1,172 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<MaterialModel>
+@section head{   
+    <script type="text/javascript" src="~/Scripts/Material.js?v=20201201"></script>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    材料：@(Model.BagMaterialItemList.Count)/@(Model.Character.PackageNum)  
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-warning" href="/equip/bag" role="button">背包</a>
+                        <a class="btn btn-xs btn-default" href="/character/detail" role="button">返回</a>
+                    </div>
+                </div>
+                <div class="panel-body bag-container">
+                    @foreach (var e in Model.BagMaterialItemList)
+                    {
+                        string num = string.Empty;
+                        if(e.RealCategory == ItemCategory.Material || e.RealCategory == ItemCategory.Item)
+                        {
+                            num = string.Format("* {0}", e.ItemNum);
+                        }
+
+                        <div class="col-xs-12 col-sm-6 col-md-3 equip-container">
+                            <p>                                
+                                <span data-bind="@e.Bind" data-id="@e.RealId" class="c@((int)e.Color) equip-name">【@(e.RealName)】@(num)</span>                                                                                                                                 
+                            </p>
+                            <div class="equip-content">
+                                @Html.Partial("/Equip/EquipRender.cshtml", e)
+                            </div>
+                        </div>
+                    }
+                </div>                
+            </div>  
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    道具：@(Model.BagItemItemList.Count)/@(Model.Character.PackageNum)                    
+                </div>
+                <div class="panel-body bag-container">
+                    @foreach (var e in Model.BagItemItemList)
+                    {
+                        string num = string.Empty;
+                        if(e.RealCategory == ItemCategory.Material || e.RealCategory == ItemCategory.Item)
+                        {
+                            num = string.Format("* {0}", e.ItemNum);
+                        }
+
+                        <div class="col-xs-12 col-sm-6 col-md-3 equip-container">
+                            <p>                                
+                                <span data-bind="@e.Bind" data-id="@e.RealId" class="c@((int)e.Color) equip-name">【@(e.RealName)】@(num)</span> 
+                                @if (e.IsRequiredValid(this.Model.Character.Level))
+                                {
+                                    <span data-id="@e.RealId" class="sr-only label label-primary" data-toggle="modal" data-target="#modalUse" >使用</span>                                    
+                                }                                                                                                   
+                            </p>
+                            <div class="equip-content">
+                                @Html.Partial("/Equip/EquipRender.cshtml", e)
+                            </div>
+                        </div>
+                    }
+                </div>                
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    商店                    
+                </div>
+                <div class="panel-body equip-container">
+                    @foreach (var e in Model.MarketItems)
+                    {   
+                        <div class="col-xs-12 col-sm-6 col-md-3 equip-container">
+                            <p data-id="@e.MarketId">                                                    
+                                <span class="c5 equip-name">【@(e.MarketName)】* @(e.MarketNum)</span>
+                                @if (e.MarketNum > 0)
+                                {
+                                    <span data-id="@e.MarketId" class="sr-only label label-primary" data-toggle="modal" data-target="#modalBuy">购买</span>
+                                }
+                            </p>
+                            <div class="equip-content">
+                                @Html.Partial("/Equip/MarketItemRender.cshtml", e)
+                            </div>                        
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">
+                    <span>铜币：<span class="physical">@Model.Character.Money</span></span>
+                    <div class="pull-right">
+                        <span>金币：<span class="lightning">@Model.Character.Coin</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    合成
+                </div>
+                <div class="panel-body equip-container">
+                    @foreach (var e in Model.SyntheticList)
+                    {   
+                        <div class="col-xs-6 col-sm-6 col-md-3 equip-container">
+                            <p data-id="@e.SyntheticId">                                                    
+                                <span class="c2 equip-name">【@(e.SyntheticName)】</span>
+                                <span data-id="@e.SyntheticId" class="sr-only label label-primary" data-toggle="modal" data-target="#modalMake">合成</span>                                
+                            </p>
+                            <div class="equip-content">
+                                @Html.Partial("/Equip/SyntheticRender.cshtml", e)
+                            </div>                        
+                        </div>
+                    }
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalBuy" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">购买</span>                                
+            </div>
+            <div class="modal-body"> 
+                <div class="form-group">
+                    <label class="control-label">数量</label>
+                    <input class="form-control count" type="number" placeholder="请输入购买数量" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs market-buy">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalUse" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">使用</span>                                
+            </div>
+            <div class="modal-body"> 
+                <div class="form-group">
+                    <label class="control-label">数量</label>
+                    <input class="form-control count" type="number" placeholder="请输入使用数量" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs item-use">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalMake" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">合成</span>                                
+            </div>
+            <div class="modal-body"> 
+                <div class="form-group">
+                    <label class="control-label">数量</label>
+                    <input class="form-control count" type="number" placeholder="请输入合成数量" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs synthetic-make">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

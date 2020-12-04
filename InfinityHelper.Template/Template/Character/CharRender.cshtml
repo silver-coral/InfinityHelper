@@ -1,0 +1,79 @@
+﻿@using System;
+@using InfinityHelper.Server.Core;
+@inherits InfinityServerTemplate<Character>
+@{
+    Layout = null;
+    Character c = Model;
+}
+
+<div>
+    <div class="media-left">
+        <img class="media-object img-circle img-thumbnail" style="width:100px;height:100px;" src="@c.Face" alt="..." />
+    </div>
+    <div class="media-body">
+        <div>
+            <span class="label label-default">Lv@(c.Level)</span>
+            <span class="label label-info">编号@(c.AccountId)</span>
+            <div class="progress">
+                <div class="progress-bar progress-bar-life" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <span>Hp：@c.Health</span>
+                </div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-mana" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <span>Mp：@c.Mana</span>
+                </div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-exp" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-percent="@(c.ExpPercent)%">
+                    <span>@(c.ExpPercent)%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />    
+    <div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <p><span class="label label-default">基础</span></p>
+            <p>
+                <span>体格：</span><span class="physical" data-add="0" id="char-str">@(c.Physique)</span>
+            </p>
+            <p>
+                <span>灵巧：</span><span class="physical" data-add="0" id="char-dex">@(c.Dexterous)</span>
+            </p>
+            <p>
+                <span>灵力：</span><span class="physical" data-add="0" id="char-eng">@(c.Spirit)</span>
+            </p>
+            <p>
+                <span>铜币：<span class="physical">@(c.Money)</span></span>
+            </p>
+            <p>
+                <span>金币：<span class="lightning">@(c.Coin)</span></span>
+            </p>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <p><span class="label label-default">其它</span></p>
+            <p>
+                <span>物理攻击：</span><span class="physical">@(c.PhysicalAttack)</span>
+            </p>
+            <p>
+                <span>法术攻击：</span><span class="physical">@(c.MagicAttack)</span>
+            </p>
+            <p>
+                <span>防御：</span><span class="physical">@(c.Defense)</span>
+            </p>
+            <p>
+                <span>暴击率：</span><span class="state">@(c.CriticalPercent)%</span>
+            </p>
+            <p>
+                <span>暴击伤害：</span><span class="state">@(c.CriticalDamagePercent)%</span>
+            </p>
+            <p>
+                <span>行动速度：</span><span class="magical">@c.MovingSpeed</span>
+            </p>
+            <p>
+                <span>幸运值：</span><span class="heal">@c.Lucky</span>
+            </p>
+        </div>
+    </div>
+</div>
