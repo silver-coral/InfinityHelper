@@ -15,6 +15,12 @@
             <span>技能耗蓝：<span class="magical">@e.ConMana</span></span>
         </p>
     }
+    @if(e.CharaLevel > 0)
+    {
+        <p>
+            <span>升级所属等级：<span class="physical">@e.CharaLevel</span></span>
+        </p>
+    }
     @if (e.ConsumeCoin > 0)
     {
         <p>

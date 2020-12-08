@@ -16,6 +16,7 @@ namespace InfinityHelper.Server.Core
         public string SkillId { get; set; }
         public string SkillName { get; set; }
         public string SkillNextDesc { get; set; }
+        public int? CharaLevel { get; set; }
         public SkillType SkillType { get; set; }
 
         public bool IsPassive { get { return SkillType == SkillType.Passive; } }

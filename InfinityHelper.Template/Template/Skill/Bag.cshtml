@@ -64,7 +64,7 @@
                             <p>
                                 @Html.Partial("/Skill/SkillNameRender.cshtml", e)
                                 <span data-id="@e.SkillId" data-type="@((int)e.SkillType)" class="sr-only label label-primary skill-on">装备</span>
-                                @if(e.ConsumeCoin > 0 && Model.Site.CurrentChar.Coin >= e.ConsumeCoin)
+                                @if(e.ConsumeCoin > 0 && Model.Site.CurrentChar.Coin >= e.ConsumeCoin && Model.Site.CurrentChar.Level >= e.CharaLevel)
                                 {
                                     <span data-id="@e.SkillId" class="sr-only label label-warning skill-upgrade">升级</span>
                                 }                                

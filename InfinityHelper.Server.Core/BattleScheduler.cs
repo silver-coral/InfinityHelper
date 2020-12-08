@@ -166,30 +166,27 @@ namespace InfinityHelper.Server.Core
                     battle.Statistics.Add(attacker.Id, new BattleStatisticsData() { Id = attacker.Id, Name = attacker.Name });
                 }
 
-                if (turn.SkillName == "[反击]")
+                switch (turn.HurtType)
                 {
-                    battle.Statistics[attacker.Id].CounterDamage += ConvertDamage(turn.Hurt);
-                }
-                else
-                {
-                    switch (turn.HurtType)
-                    {
-                        case BattleHurtType.PhysicalDamage:
-                            battle.Statistics[attacker.Id].PhysicalDamage += ConvertDamage(turn.Hurt);
-                            break;
-                        case BattleHurtType.MagicalDamage:
-                            battle.Statistics[attacker.Id].MagicalDamage += ConvertDamage(turn.Hurt); 
-                            break;
-                        case BattleHurtType.DotDamage: battle.Statistics[attacker.Id].DotDamage += ConvertDamage(turn.Hurt); 
-                            break;
-                        case BattleHurtType.Heal:
-                            battle.Statistics[attacker.Id].Heal += ConvertDamage(turn.Hurt);
-                            break;
-                        case null:
-                            battle.Statistics[attacker.Id].NormalDamage += ConvertDamage(turn.Hurt);
-                            break;
-                        default: break;
-                    }
+                    case BattleHurtType.PhysicalDamage:
+                        battle.Statistics[attacker.Id].PhysicalDamage += ConvertDamage(turn.Hurt);
+                        break;
+                    case BattleHurtType.MagicalDamage:
+                        battle.Statistics[attacker.Id].MagicalDamage += ConvertDamage(turn.Hurt);
+                        break;
+                    case BattleHurtType.DotDamage:
+                        battle.Statistics[attacker.Id].DotDamage += ConvertDamage(turn.Hurt);
+                        break;
+                    case BattleHurtType.CounterDamage:
+                        battle.Statistics[attacker.Id].CounterDamage += ConvertDamage(turn.Hurt);
+                        break;
+                    case BattleHurtType.Heal:
+                        battle.Statistics[attacker.Id].Heal += ConvertDamage(turn.Hurt);
+                        break;                    
+                    case null:
+                        battle.Statistics[attacker.Id].NormalDamage += ConvertDamage(turn.Hurt);
+                        break;
+                    default: break;
                 }
             }
         }

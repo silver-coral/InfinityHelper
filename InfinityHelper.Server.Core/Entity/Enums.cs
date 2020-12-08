@@ -58,7 +58,8 @@ namespace InfinityHelper.Server.Core
         PhysicalDamage = 1,
         MagicalDamage = 2,
         DotDamage = 3,
-        Heal = 4,
+        CounterDamage = 4,
+        Heal = 5,
     }
 
     public enum ItemColor
