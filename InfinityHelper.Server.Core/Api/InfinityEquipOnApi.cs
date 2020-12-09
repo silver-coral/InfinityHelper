@@ -17,6 +17,7 @@ namespace InfinityHelper.Server.Core
 
             CharacterEquipCache.ClearCache(this._site.CurrentCharId);
             CharacterCache.ClearCache(this._site.CurrentCharId);
+            CharacterActivityCache.ClearCache(this._site.CurrentCharId);
 
             Response.WriteAsync(JsonUtil.Serialize(new { }));
         }

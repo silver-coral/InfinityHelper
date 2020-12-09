@@ -17,8 +17,9 @@ namespace InfinityHelper.Server.Core
 
             this._site.MarketBuy(eid, count);
 
-            CharacterCache.ClearCache(this._site.CurrentCharId);
+            //CharacterCache.ClearCache(this._site.CurrentCharId);
             CharacterMarketCache.ClearCache(this._site.CurrentCharId);
+            CharacterActivityCache.ClearCache(this._site.CurrentCharId);
 
             Response.WriteAsync(JsonUtil.Serialize(new { }));
         }

@@ -16,6 +16,7 @@ namespace InfinityHelper.Server.Core
             this._site.SkillUpgrade(eid);
 
             CharacterCache.ClearCache(this._site.CurrentCharId);
+            CharacterActivityCache.ClearCache(this._site.CurrentCharId);
 
             Response.WriteAsync(JsonUtil.Serialize(new { }));
         }

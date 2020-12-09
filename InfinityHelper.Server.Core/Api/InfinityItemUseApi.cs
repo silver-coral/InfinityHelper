@@ -16,7 +16,8 @@ namespace InfinityHelper.Server.Core
             int count = GetQuery<int>("count");
             this._site.ItemUse(eid, count);
 
-            CharacterCache.ClearCache(this._site.CurrentCharId);
+            //CharacterCache.ClearCache(this._site.CurrentCharId);
+            CharacterActivityCache.ClearCache(this._site.CurrentCharId);
 
             Response.WriteAsync(JsonUtil.Serialize(new { }));
         }

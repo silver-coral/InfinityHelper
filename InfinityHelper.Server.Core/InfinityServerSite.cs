@@ -77,7 +77,21 @@ namespace InfinityHelper.Server.Core
 
         public string CurrentCharId { get; set; }
 
-        public Character CurrentChar { get { return InitChar(); } }
+        public Character CurrentChar
+        {
+            get
+            {
+                var c = InitChar();
+                c.MergeActivity(InitCharActivity());
+                return c;
+            }
+        }
+
+        //public void RefreshCharActivity()
+        //{
+        //    CharacterActivityCache.ClearCache(this.CurrentCharId);
+        //    this.CurrentChar.MergeActivity(InitCharActivity());
+        //}
 
         public CharacterConfig Config { get; set; }
 
@@ -340,12 +354,23 @@ namespace InfinityHelper.Server.Core
             return this.PostResult<string>(path, null);
         }
 
+        public CharacterActivity InitCharActivity()
+        {
+            return CharacterActivityCache.TryGetValue(this.CurrentCharId, id =>
+            {
+                string path = string.Format("/foodie-api/gamepassport/getGameCharacterActivity?charaId={0}", this.CurrentCharId);
+                var ca = this.GetResult<CharacterActivity>(path);
+                return ca;
+            });
+        }
+
         public Character InitChar()
         {
             Character result = CharacterCache.TryGetValue(this.CurrentCharId, id =>
             {
                 string path = string.Format("/foodie-api/gamepassport/getGameCharacter?charaId={0}", this.CurrentCharId);
-                return this.GetResult<Character>(path);
+                var c = this.GetResult<Character>(path);  
+                return c;
             });
 
             result.IsGuaji = BattleScheduler.CharDict.ContainsKey(result.Id);

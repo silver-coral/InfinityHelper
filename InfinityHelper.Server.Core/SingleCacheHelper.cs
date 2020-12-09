@@ -88,6 +88,7 @@ namespace InfinityHelper.Server.Core
             return cList.FirstOrDefault(p => p.AccountId == no);
         }
     }
+    public class CharacterActivityCache : SingleCacheHelper<string, CharacterActivity> { }
     public class CharacterEquipCache : SingleCacheHelper<string, List<Equipment>> { }
     public class CharacterSkillCache : SingleCacheHelper<string, List<Skill>> { }   
     public class CharacterArmyGroupCache : SingleCacheHelper<string, ArmyGroup> { }

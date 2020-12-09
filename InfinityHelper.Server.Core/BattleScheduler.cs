@@ -348,10 +348,7 @@ namespace InfinityHelper.Server.Core
             if (battle.GameItemsList != null)
             {
                 this._site.AutoSell();
-            }
-
-            CharacterCache.ClearCache(this._site.CurrentCharId);
-            this._site.InitChar();
+            }            
 
             UpdateCharDynamic(battle, this._site.Dynamic, mapId);
 
@@ -383,12 +380,14 @@ namespace InfinityHelper.Server.Core
                 List<BattleResult> battleList = this._site.BattleDungeon();
                 InternalPropcessDungeonBattleResult(battleList, map.MapId);
                 InternalProcessAllyRecord(battleList.Count, map.MapId);
+                CharacterActivityCache.ClearCache(this._site.CurrentCharId);
                 return battleList.Sum(p => p.Wait);
             }
             else
             {
                 BattleResult battle = this._site.Battle();
                 InternalProcessBattleResult(battle, map.MapId);
+                CharacterActivityCache.ClearCache(this._site.CurrentCharId);
                 return battle.Wait;
             }
         }

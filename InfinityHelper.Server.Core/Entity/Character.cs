@@ -72,5 +72,38 @@ namespace InfinityHelper.Server.Core
 
         [JsonIgnore]
         public decimal CriticalDamagePercent { get { return Math.Round(this.CritDamage * 100m, 1); } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="c"></param>
+        public void MergeActivity(CharacterActivity c)
+        {
+            this.Coin = c.Coin;
+            this.Face = c.Face;
+            this.UpgradeExp = c.UpgradeExp;
+            this.Money = c.Money;
+            this.Exp = c.Exp;
+            this.RealmExp = c.RealmExp;
+            this.RewardNum = c.RewardNum;
+            this.PackageNum = c.PackageNum;
+            this.Name = c.Name;
+        }        
+    }
+
+    public class CharacterActivity
+    {
+        
+        public int Coin { get; set; }
+        public string Face { get; set; }
+        public long UpgradeExp { get; set; }
+        public long Money { get; set; }
+        public long Exp { get; set; }
+        public int RealmExp { get; set; }
+        public int RewardNum { get; set; }
+        public int PackageNum { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string AccountId { get; set; }        
     }
 }

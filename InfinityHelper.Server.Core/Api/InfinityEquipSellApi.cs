@@ -15,7 +15,8 @@ namespace InfinityHelper.Server.Core
             string eids = GetQuery("eids");
             this._site.EquipSell(eids);
 
-            CharacterCache.ClearCache(this._site.CurrentCharId);
+            //CharacterCache.ClearCache(this._site.CurrentCharId);
+            CharacterActivityCache.ClearCache(this._site.CurrentCharId);
 
             Response.WriteAsync(JsonUtil.Serialize(new { }));
         }
