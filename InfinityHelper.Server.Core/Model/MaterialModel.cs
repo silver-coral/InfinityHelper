@@ -26,7 +26,7 @@ namespace InfinityHelper.Server.Core
 
         private void InitBagItems()
         {
-            this.BagItemList = this._site.QueryBagItems();            
+            this.BagItemList = this._site.QueryMaterials();            
         }
 
         public Character Character { get; set; }

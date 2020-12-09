@@ -417,6 +417,12 @@ namespace InfinityHelper.Server.Core
             });
         }
 
+        public List<PackageItem> QueryMaterials()
+        {
+            string path = string.Format("/foodie-api/gameChara/getCharaMaterial?charaId={0}", this.CurrentCharId);
+            return this.PostResult<List<PackageItem>>(path, null);
+        }
+
         public List<Map> InitStaticAllMaps()
         {
             return AllMapCache.TryGetValue("0", id =>
