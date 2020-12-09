@@ -19,12 +19,21 @@ namespace InfinityHelper.Server.Core
         public static Dictionary<string, List<BattleResult>> ResultDic { get { return _resultDict; } }
 
         public static Action<string, BattleResult> OnBattleComplete;
+        public static Action<string, string> OnError;
 
         private static void TriggerBattleComplete(string charId, BattleResult bt)
         {
             if (OnBattleComplete != null)
             {
                 OnBattleComplete(charId, bt);
+            }
+        }
+
+        private static void TriggerError(string charId,string error)
+        {
+            if(OnError != null)
+            {
+                OnError(charId, error);
             }
         }
 
@@ -35,6 +44,7 @@ namespace InfinityHelper.Server.Core
             if (result)
             {
                 dc.OnBattleComplete += TriggerBattleComplete;
+                dc.OnError += TriggerError;
                 dc.Start();
             }
             return result;
@@ -59,6 +69,7 @@ namespace InfinityHelper.Server.Core
         private readonly CancellationTokenSource _ts;
         private readonly CancellationToken _token;
         public event Action<string, BattleResult> OnBattleComplete;
+        public event Action<string, string> OnError;
         public string CharId { get { return _charId; } }
 
         //public List<BattleResult> CurrentBattle { get; private set; }
@@ -414,12 +425,13 @@ namespace InfinityHelper.Server.Core
                     }
                     catch (OperationCanceledException) { } //人工取消
                     catch (Exception ex)
-                    {
-                        Logger.Error(ex);
+                    {                       
+                        Logger.Error(string.Format("CharId={0},MapId={1},Error={2}", this._charId, this._site.Config.CurrentMapId, ex.Message));
+                        this.OnError(this._charId, ex.Message);
 
                         if (tryTimes < 30)
                         {
-                            sleepTime = 20 * (tryTimes + 1) * 1000; //等10秒重试，而不是简单地退出
+                            sleepTime = 10 * (tryTimes + 1) * 1000; //等10秒重试，而不是简单地退出
                             tryTimes++;
                         }
                         else
@@ -438,7 +450,8 @@ namespace InfinityHelper.Server.Core
             catch (ThreadAbortException) { } //IIS关闭，强行中止线程
             catch (Exception ex)
             {
-                Logger.Error(new Exception(string.Format("CharId={0},MapId={1},Error={2}", this._charId, this._site.Config.CurrentMapId, ex.ToString())));
+                Logger.Error(string.Format("CharId={0},MapId={1},Error={2}", this._charId, this._site.Config.CurrentMapId, ex.Message));
+                this.OnError(this._charId, ex.Message);
                 BattleScheduler.CancelChar(this._charId);
             }
         }

@@ -14,6 +14,7 @@ namespace InfinityHelper.Server
         public void Configuration(IAppBuilder app)
         {
             BattleScheduler.OnBattleComplete = bs_onBattleComplete;
+            BattleScheduler.OnError = bs_onError;
 
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableDetailedErrors = false; //禁用详细错误信息
@@ -28,6 +29,15 @@ namespace InfinityHelper.Server
             try
             {
                 UserManagerHub.GetClients(charId).battleLog(JsonUtil.Serialize(bt)); 
+            }
+            catch { }
+        }
+
+        private void bs_onError(string charId,string error)
+        {
+            try
+            {
+                UserManagerHub.GetClients(charId).onError(error);
             }
             catch { }
         }

@@ -10,12 +10,16 @@
         $(document).ready(function () {
             var connection = $.hubConnection();
             var connectionHubProxy = connection.createHubProxy('userManagerHub');
-            connectionHubProxy.on('alert', function (msg) { alert(msg); });
+            connectionHubProxy.on('onError', function (msg) {
+                var content = $("<div class='require'></div>");  
+                content.append(msg);
+                $(".panel-body").prepend(content);
+            });
             connectionHubProxy.on("battleLog", function (data) {
                 var content = $("<div></div>");
                 var bt = JSON.tryParse(data);
                 if (bt == false) {
-                    content.append($("<span class='error'></span>").append(data));
+                    content.append($("<span class='require'></span>").append(data));
                 }
                 else {
                     content.append($("<span class='name'></span>").append(bt.CharName));

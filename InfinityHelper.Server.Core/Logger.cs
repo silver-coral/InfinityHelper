@@ -35,6 +35,16 @@ namespace InfinityHelper.Server.Core
             LogFile(ex.ToString());
         }
 
+        public static void Error(string msgFormat, params object[] args)
+        {
+            if (args.Count() > 0)
+            {
+                msgFormat = string.Format(msgFormat, args);
+            }
+            _traceSource.TraceEvent(TraceEventType.Error, 0, "[{0:yyyy-MM-dd HH:mm:ss:fff}]-{1}", DateTime.Now, msgFormat);
+            LogFile(msgFormat);
+        }
+
         private static void LogFile(string msg)
         {
             DateTime now = DateTime.Now;
