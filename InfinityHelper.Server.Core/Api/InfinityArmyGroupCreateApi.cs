@@ -16,9 +16,8 @@ namespace InfinityHelper.Server.Core
 
             this._site.ArmyGroupCreate(name);
 
-            CharacterArmyGroupCache.ClearCache(this._site.CurrentCharId);
-            AllMapCache.ClearCache(this._site.CurrentCharId);            
-            CharacterConfigCache.ClearState(this._site.Config);
+            CharacterArmyGroupCache.ClearCache(this._site.CurrentCharId);                    
+            CharacterConfigCache.CancelGuaji(this._site.Config);
 
             Response.WriteAsync(JsonUtil.Serialize(new { }));
         }

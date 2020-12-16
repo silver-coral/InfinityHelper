@@ -23,18 +23,25 @@ namespace InfinityHelper.Server.Core
             this.CharacterDynamic = this._site.Dynamic;
             this.CharEquipList = this._site.InitCharEquips();
             this.AllSkillList = this._site.InitCharSkills();
-            this.MapList = this._site.InitAllMaps();
+            this.MapList = this._site.InitAllSingleMaps();
+            this.DungeonMapList = this._site.InitAllDungeonMaps();
             //this.MarketItems = this._site.InitMarket();
             this.ArmyGroup = this._site.InitArmyGroup();
             this.RealmBonus = this._site.InitRealmBonus();
 
             this.CurrentMap = this.MapList.FirstOrDefault(p => p.MapId == this._site.Config.CurrentMapId);
-
             if (this.CurrentMap == null)
             {
                 this.CurrentMap = this.MapList.FirstOrDefault();
-
                 this.Site.Config.CurrentMapId = this.CurrentMap.MapId;
+                CharacterConfigCache.SaveConfig(this.Site.Config);
+            }
+
+            this.CurrentDungeonMap = this.DungeonMapList.FirstOrDefault(p => p.MapId == this._site.Config.CurrentDungeonMapId);
+            if(this.CurrentDungeonMap == null)
+            {
+                this.CurrentDungeonMap = this.DungeonMapList.FirstOrDefault();
+                this.Site.Config.CurrentDungeonMapId = this.CurrentDungeonMap.MapId;
                 CharacterConfigCache.SaveConfig(this.Site.Config);
             }
         }
@@ -61,7 +68,9 @@ namespace InfinityHelper.Server.Core
         public CharacterDynamic CharacterDynamic { get; set; }
         public List<Equipment> CharEquipList { get; set; }        
         public List<Map> MapList { get; set; }
+        public List<Map> DungeonMapList { get; set; }
         public Map CurrentMap { get; set; }
+        public Map CurrentDungeonMap { get; set; }
         //public List<MarketItem> MarketItems { get; set; }
         public ArmyGroup ArmyGroup { get; set; }
         public bool IsReadOnly { get; set; }

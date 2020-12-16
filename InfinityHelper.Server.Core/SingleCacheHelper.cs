@@ -127,11 +127,17 @@ namespace InfinityHelper.Server.Core
             }
         }
 
-        public static void ClearState(CharacterConfig cfg)
+        public static void CancelGuaji(CharacterConfig cfg)
         {
             BattleScheduler.CancelChar(cfg.CharId);
-            cfg.IsGuaji = false;
-            cfg.CurrentMapId = null;
+            cfg.IsGuaji = false;            
+            SaveConfig(cfg);
+        }
+
+        public static void CancelDungeonGuaji(CharacterConfig cfg)
+        {
+            BattleScheduler.CancelChar(cfg.CharId);
+            cfg.IsDungeonGuaji = false;
             SaveConfig(cfg);
         }
 

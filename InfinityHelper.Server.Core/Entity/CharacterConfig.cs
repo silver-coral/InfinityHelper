@@ -14,8 +14,10 @@ namespace InfinityHelper.Server.Core
         }
 
         public string CharId { get; set; }
-        public string CurrentMapId { get; set; }
+        public string CurrentMapId { get; set; }   
+        public string CurrentDungeonMapId { get; set; }
         public bool IsGuaji { get; set; }
+        public bool IsDungeonGuaji { get; set; }
         public List<string> IPList { get; set; }
     }
 }

@@ -150,6 +150,7 @@ namespace InfinityHelper.Server.Core
                 {
                     cookieUri = new Uri(option.CookieSourceUrl);
                 }
+
                 foreach (Cookie cookie in request.CookieContainer.GetCookies(cookieUri))
                 {
                     var current = option.CurrentCookies.FirstOrDefault(p => p.Name == cookie.Name); //移除重名的cookie

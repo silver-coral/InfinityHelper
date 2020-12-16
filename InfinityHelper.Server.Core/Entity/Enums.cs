@@ -76,6 +76,8 @@ namespace InfinityHelper.Server.Core
         Pink = 5,
         [Description("红色")]
         Red = 6,
+        [Description("橙色")]
+        Orange = 7,
     }
 
     public enum SkillType

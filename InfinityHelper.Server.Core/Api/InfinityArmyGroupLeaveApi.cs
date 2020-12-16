@@ -31,7 +31,7 @@ namespace InfinityHelper.Server.Core
 
                 if (isCaption)
                 {
-                    CharacterConfigCache.ClearState(this._site.Config);
+                    CharacterConfigCache.CancelDungeonGuaji(this._site.Config);
                 }
             }
 

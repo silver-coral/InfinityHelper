@@ -66,8 +66,13 @@
     <Compile Include="Api\InfinityArmyGroupCreateApi.cs" />
     <Compile Include="Api\InfinityArmyGroupRemoveApi.cs" />
     <Compile Include="Api\InfinityArmyGroupLeaveApi.cs" />
+    <Compile Include="Api\InfinityCancelDungeonGuajiApi.cs" />
     <Compile Include="Api\InfinityClearGlobalCacheApi.cs" />
     <Compile Include="Api\InfinityClearMapItemApi.cs" />
+    <Compile Include="Api\InfinityDungeonGuajiApi.cs" />
+    <Compile Include="Api\InfinityCancelOfflineApi.cs" />
+    <Compile Include="Api\InfinityOfflineApi.cs" />
+    <Compile Include="Api\InfinitySwithDungeonMapApi.cs" />
     <Compile Include="Api\InfinitySyntheticMakeApi.cs" />
     <Compile Include="Api\InfinityRealmUpApi.cs" />
     <Compile Include="Api\InfinityRealmMaterialApi.cs" />
@@ -99,6 +104,7 @@
     <Compile Include="Api\InfinitySwithMapApi.cs" />
     <Compile Include="BattleScheduler.cs" />
     <Compile Include="CodeBuilder.cs" />
+    <Compile Include="Entity\OffLineResult.cs" />
     <Compile Include="Entity\ArmyGroup.cs" />
     <Compile Include="Entity\BattleResult.cs" />
     <Compile Include="Entity\RealmBonus.cs" />

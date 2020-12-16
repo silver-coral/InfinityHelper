@@ -14,7 +14,7 @@ namespace InfinityHelper.Server.Core
         {
             if (string.IsNullOrEmpty(this._site.Config.CurrentMapId))
             {
-                this._site.Config.CurrentMapId = this._site.InitAllMaps().FirstOrDefault().MapId;
+                this._site.Config.CurrentMapId = this._site.InitAllSingleMaps().FirstOrDefault().MapId;
             }
 
             BattleScheduler.AddChar(this._site);

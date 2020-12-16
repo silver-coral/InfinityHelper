@@ -21,12 +21,21 @@ namespace InfinityHelper.Server.Core
         public int BattleWinCount { get; set; }
         public long BattleTotalWait { get; set; }
         public long BattleTotalExp { get; set; }
-        public Dictionary<ItemColor, int> DropItemsCount { get; set; }
+       
 
         public int BattleLevelTotalCount { get; set; }
         public int BattleLevelWinCount { get; set; }
         public long BattleLevelTotalWait { get; set; }
         public long BattleLevelTotalExp { get; set; }
+
+
+        public int BattleDungeonTotalCount { get; set; }
+        public int BattleDungeonWinCount { get; set; }
+        public int BattleDungeonLevelTotalCount { get; set; }
+        public int BattleDungeonLevelWinCount { get; set; }
+        public long BattleDungeonLevelTotalWait { get; set; }
+        public long BattleDungeonLevelTotalExp { get; set; }
+
 
         public string TotalTimeStr
         {
@@ -52,6 +61,11 @@ namespace InfinityHelper.Server.Core
             return result;
         }
 
+        public decimal DungeonTotalWinRate { get { return BattleDungeonTotalCount == 0 ? 0 : Math.Round(BattleDungeonWinCount * 100m / BattleDungeonTotalCount, 1); } }
+        public decimal DungeonWinRate { get { return BattleDungeonLevelTotalCount == 0 ? 0 : Math.Round(BattleDungeonLevelWinCount * 100m / BattleDungeonLevelTotalCount, 1); } }
+        public decimal DungeonEPM { get { return BattleDungeonLevelTotalWait == 0 ? 0 : Math.Round(BattleDungeonLevelTotalExp * 60 * 1000m / BattleDungeonLevelTotalWait); } }
+
+        public Dictionary<ItemColor, int> DropItemsCount { get; set; }
         public Dictionary<string, Dictionary<string, MapItem>> ItemList { get; set; }
 
         public void AppendItem(string mapId, MapItem item)

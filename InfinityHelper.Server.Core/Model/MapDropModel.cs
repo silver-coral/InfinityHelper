@@ -52,7 +52,7 @@ namespace InfinityHelper.Server.Core
 
         private void InitMapItems()
         {
-            this.MapList = this._site.InitStaticAllMaps();
+            this.MapList = this._site.InitAllMaps();
             
 
             this._cate = (ItemCategory?)GetQuery<int?>("type");

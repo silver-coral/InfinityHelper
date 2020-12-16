@@ -37,9 +37,9 @@ namespace InfinityHelper.Server.Core
             }
         }
 
-        public static bool AddChar(InfinityServerSite r)
+        public static bool AddChar(InfinityServerSite r, bool isDungeon = false)
         {
-            BattleForChar dc = new BattleForChar(r);
+            BattleForChar dc = new BattleForChar(r, isDungeon);
             bool result = _charDict.TryAdd(r.CurrentCharId, dc);
             if (result)
             {
@@ -60,24 +60,50 @@ namespace InfinityHelper.Server.Core
             }
             return result;
         }
+
+        public static bool IsGuaji(string charId)
+        {
+            bool result = false;
+            BattleForChar dc;
+            if(_charDict.TryGetValue(charId,out dc))
+            {
+                result = (dc.IsDungeon == false);
+            }
+            return result;
+        }
+
+        public static bool IsDungeonGuaji(string charId)
+        {
+            bool result = false;
+            BattleForChar dc;
+            if (_charDict.TryGetValue(charId, out dc))
+            {
+                result = (dc.IsDungeon == true);
+            }
+            return result;
+        }
     }
 
     public class BattleForChar
     {
         private InfinityServerSite _site;
         private string _charId;
+        private bool _isDungeon;
         private readonly CancellationTokenSource _ts;
         private readonly CancellationToken _token;
         public event Action<string, BattleResult> OnBattleComplete;
         public event Action<string, string> OnError;
         public string CharId { get { return _charId; } }
+        public bool IsDungeon { get { return this._isDungeon; } }
+        
 
         //public List<BattleResult> CurrentBattle { get; private set; }
 
-        public BattleForChar(InfinityServerSite site)
+        public BattleForChar(InfinityServerSite site, bool isDungeon = false)
         {
             this._site = site;
             this._charId = site.CurrentCharId;
+            this._isDungeon = isDungeon;
             this._ts = new CancellationTokenSource();
             this._token = _ts.Token;
         }
@@ -243,36 +269,59 @@ namespace InfinityHelper.Server.Core
 
         private void UpdateCharDynamic(BattleResult battle, CharacterDynamic cd, string mapId, bool addExp = true)
         {
-            cd.BattleTotalCount++;
             cd.BattleTotalWait += battle.Wait;
-            cd.BattleLevelTotalCount++;
-            cd.BattleLevelTotalWait += battle.Wait;
+
+            if (this._isDungeon)
+            {
+                cd.BattleDungeonTotalCount++;               
+                cd.BattleDungeonLevelTotalCount++;
+                cd.BattleDungeonLevelTotalWait += battle.Wait;
+            }
+            else
+            {
+                cd.BattleTotalCount++;                
+                cd.BattleLevelTotalCount++;
+                cd.BattleLevelTotalWait += battle.Wait;
+            }
 
             if (addExp)
             {
                 cd.BattleTotalExp += battle.DropExp;
-                cd.BattleLevelTotalExp += battle.DropExp;
 
-                //if (CharacterCache.HasCache(cd.CharId))
-                //{
-                //    Character c = CharacterCache.LoadCache(cd.CharId);
-                //    c.Exp += battle.DropExp;
-                //    if (c.Exp > c.UpgradeExp)
-                //    {
-                //        CharacterCache.ClearCache(cd.CharId);
-                //    }
-                //}
-            }
+                if (this.IsDungeon)
+                {
+                    cd.BattleDungeonLevelTotalExp += battle.DropExp;
+                }
+                else
+                {
+                    cd.BattleLevelTotalExp += battle.DropExp;
+                }
+
+                CharacterActivityCache.ClearCache(cd.CharId);
+
+                if (battle.UpgradeLev == true)
+                {
+                    CharacterCache.ClearCache(cd.CharId);
+                }
+            }            
 
             if (battle.Success == true)
             {
-                cd.BattleWinCount++;
-                cd.BattleLevelWinCount++;
+                if (this._isDungeon)
+                {
+                    cd.BattleDungeonWinCount++;
+                    cd.BattleDungeonLevelWinCount++;
+                }
+                else
+                {
+                    cd.BattleWinCount++;
+                    cd.BattleLevelWinCount++;
+                }
             }
 
             if (battle.GameItemsList != null)
             {
-                var allMaps = this._site.InitStaticAllMaps();
+                var allMaps = this._site.InitAllMaps();
                 if (!string.IsNullOrEmpty(mapId))
                 {
                     Map map = allMaps.FirstOrDefault(p => p.MapId == mapId);
@@ -374,33 +423,48 @@ namespace InfinityHelper.Server.Core
             BattleScheduler.ResultDic[this._site.CurrentCharId] = new List<BattleResult>() { battle };
         }
 
+        private string EnsureMapId()
+        {
+            string mapId = null;            
+            if (this._isDungeon)
+            {
+                mapId = this._site.Config.CurrentDungeonMapId;
+                if (string.IsNullOrEmpty(mapId))
+                {
+                    mapId = this._site.InitAllDungeonMaps().First().MapId;
+                }
+            }
+            else
+            {
+                mapId = this._site.Config.CurrentMapId;
+                if (string.IsNullOrEmpty(mapId))
+                {
+                    mapId = this._site.InitAllSingleMaps().First().MapId;
+                }
+            }
+            return mapId;
+        }
+
         private int InternalBattle()
         {
-            var mapList = this._site.InitAllMaps();
-            var map = mapList.FirstOrDefault(p => p.MapId == this._site.Config.CurrentMapId);
-            if (map == null)
-            {
-                map = mapList.FirstOrDefault();
+            string mapId = EnsureMapId();
 
-                this._site.Config.CurrentMapId = map.MapId;
-                CharacterConfigCache.SaveConfig(this._site.Config);
-            }
-
-            if (map.IsDungeon)
+            int wait = 0;            
+            if (this._isDungeon)
             {
                 List<BattleResult> battleList = this._site.BattleDungeon();
-                InternalPropcessDungeonBattleResult(battleList, map.MapId);
-                InternalProcessAllyRecord(battleList.Count, map.MapId);
-                CharacterActivityCache.ClearCache(this._site.CurrentCharId);
-                return battleList.Sum(p => p.Wait);
+                InternalPropcessDungeonBattleResult(battleList, mapId);
+                InternalProcessAllyRecord(battleList.Count, mapId);
+                wait = battleList.Sum(p => p.Wait);                
             }
             else
             {
                 BattleResult battle = this._site.Battle();
-                InternalProcessBattleResult(battle, map.MapId);
-                CharacterActivityCache.ClearCache(this._site.CurrentCharId);
-                return battle.Wait;
+                InternalProcessBattleResult(battle, mapId);                
+                wait = battle.Wait;
             }
+
+            return wait;
         }
 
         /// <summary>
@@ -419,6 +483,7 @@ namespace InfinityHelper.Server.Core
                     try
                     {
                         sleepTime = InternalBattle();
+                       
 
                         //判断一下是否人工取消
                         _token.ThrowIfCancellationRequested();

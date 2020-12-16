@@ -7,7 +7,7 @@
     Character c = Model.Character;
 }
 @section head{
-    <script type="text/javascript" src="~/Scripts/Map.js?v=20201106"></script>
+    <script type="text/javascript" src="~/Scripts/Map.js?v=20201216"></script>
     <script type="text/javascript" src="~/Scripts/Char.js?v=20201125"></script>
 }
 <div class="container">
@@ -67,9 +67,22 @@
                         <p>
                             <span>金币：<span class="lightning">@(c.Coin)</span></span>
                         </p>
-                        <p>
-                            <span>剩余副本奖励次数：</span><span class="state">@(c.RewardNum)</span>
-                        </p>                                            
+                        <div class="col-xs-12 col-sm-12 col-md-12">                        
+                            <p>
+                                <span>总挂机时间：</span><span class="state">@(Model.CharacterDynamic.TotalTimeStr)</span>
+                            </p>                                              
+                        </div>
+                        @{
+                            var upTime = Model.Site.Dynamic.GetUpgradeTime(c.UpgradeExp - c.Exp);
+                            if(upTime != null)
+                            {        
+                                <div class="col-xs-12 col-sm-12 col-md-12"> 
+                                    <p>
+                                        <span>预计升级时间：@(string.Format("{0:yyyy-MM-dd HH:mm:ss}",upTime))</span>
+                                    </p>
+                                </div>
+                            }
+                        }                                                                 
                     </div>
                 </div>
             </div>
@@ -80,14 +93,17 @@
                     {
                         <div class="pull-right">   
                             <a class="btn btn-xs btn-danger epm-reset" role="button">重置效率</a>
-                            <a class="btn btn-xs btn-default" href="#" data-toggle="modal" data-target="#modalMap" role="button">切换</a>                        
+                            @if (!c.IsOffline)
+                            {
+                                <a class="btn btn-xs btn-default" href="#" data-toggle="modal" data-target="#modalMap" role="button">切换</a>                        
+                            }
                         </div>
                     }
                 </div>
                 <div class="panel-body">
                     <div class="col-xs-6 col-sm-6 col-md-6">                        
                         <p>
-                            <span>地图名称：</span><span class="physical">@(Model.CurrentMap.MapName)</span>
+                            <span class="physical">@(Model.CurrentMap.MapName)</span>
                         </p>                                                
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">                        
@@ -104,29 +120,16 @@
                         <p>
                             <span>平均效率：</span><span class="state">@(Model.Site.Dynamic.EPM)</span>
                         </p>                                              
-                    </div> 
-                    <div class="col-xs-12 col-sm-12 col-md-12">                        
-                        <p>
-                            <span>总挂机时间：</span><span class="state">@(Model.CharacterDynamic.TotalTimeStr)</span>
-                        </p>                                              
                     </div>
-                    @{
-                        var upTime = Model.Site.Dynamic.GetUpgradeTime(c.UpgradeExp - c.Exp);
-                        if(upTime != null)
-                        {        
-                            <div class="col-xs-12 col-sm-12 col-md-12"> 
-                                <p>
-                                    <span>预计升级时间：@(string.Format("{0:yyyy-MM-dd HH:mm:ss}",upTime))</span>
-                                </p>
-                            </div>
-                        }
-                    }
                 </div>
                 <div class="panel-footer">
                     @if (c.IsGuaji)
-                    {
-                        var bc = BattleScheduler.CharDict[c.Id];
+                    {                        
                         <span>胜率<span class="state"> @(Model.Site.Dynamic.WinRate)%</span></span>
+                    }
+                    else if (c.IsOffline)
+                    {
+                        <span>离线中</span>
                     }
                     else
                     {
@@ -140,6 +143,77 @@
                                 <a class="btn btn-xs btn-info" href="/Map/Guaji" role="button">挂机状态</a>
                                 <a class="btn btn-xs btn-danger battle-cancel" href="#" role="button">取消挂机</a>
                             }
+                            else if (c.IsOffline)
+                            {
+                                <a class="btn btn-xs btn-success offline-cancel" href="#" role="button">离线结算</a>
+                            }
+                            else
+                            {
+                                if(Model.ArmyGroup == null)
+                                {
+                                    <a class="btn btn-xs btn-primary battle-guaji" href="#" role="button">开始挂机</a>
+                                }  
+                                <a class="btn btn-xs btn-warning offline-start" href="#" role="button">开始离线</a>
+                            }                            
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    副本  
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">   
+                            <a class="btn btn-xs btn-danger epm-d-reset" role="button">重置效率</a>
+                            <a class="btn btn-xs btn-default" href="#" data-toggle="modal" data-target="#modalDungeonMap" role="button">切换</a>                        
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span class="physical">@(Model.CurrentDungeonMap.MapName)</span>
+                        </p>                                                
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>怪物等级：</span><span class="physical">@(Model.CurrentDungeonMap.MapMinLv) ~ @(Model.CurrentDungeonMap.MapMaxLv)</span>
+                        </p>                                              
+                    </div>                                         
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>战斗次数：</span><span class="state">@(Model.Site.Dynamic.BattleDungeonLevelTotalCount)</span>
+                        </p>                                                
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>平均效率：</span><span class="state">@(Model.Site.Dynamic.DungeonEPM)</span>
+                        </p>                                              
+                    </div> 
+                    <div class="col-xs-6 col-sm-6 col-md-6">                        
+                        <p>
+                            <span>剩余副本奖励次数：</span><span class="state">@(c.RewardNum)</span>
+                        </p>                                             
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    @if (c.IsDungeonGuaji)
+                    {                       
+                        <span>胜率<span class="state"> @(Model.Site.Dynamic.DungeonWinRate)%</span></span>
+                    }
+                    else
+                    {
+                        @:&nbsp;
+                    }
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            @if (c.IsDungeonGuaji)
+                            {
+                                <a class="btn btn-xs btn-info" href="/Map/Guaji" role="button">副本状态</a>
+                                <a class="btn btn-xs btn-danger battle-d-cancel" href="#" role="button">取消挂机</a>
+                            }
                             else
                             {
                                 if (Model.ArmyGroup != null)
@@ -148,7 +222,7 @@
                                     {
                                         if (Model.ArmyGroup.CharaInfoVoList.Count == 3)
                                         {
-                                            <a class="btn btn-xs btn-primary battle-guaji" href="#" role="button">开始挂机</a> 
+                                            <a class="btn btn-xs btn-primary battle-d-guaji" href="#" role="button">开始挂机</a> 
                                         }
                                         else
                                         {
@@ -159,53 +233,12 @@
                                     {
                                         <a class="btn btn-xs btn-info" href="/Map/Guaji" role="button">副本状态</a> 
                                     }
-                                }
-                                else
-                                {
-                                    <a class="btn btn-xs btn-primary battle-guaji" href="#" role="button">开始挂机</a> 
-                                }                                                           
+                                }                                                                                         
                             }                        
                         </div>
                     }
                 </div>
-            </div>
-            <div class="panel panel-inverse">
-                <div class="panel-heading">
-                    技能     
-                    @if (!Model.IsReadOnly)
-                    {
-                        <div class="pull-right">
-                            <a class="btn btn-xs btn-default" href="/skill/bag" role="button">配置</a>
-                        </div>
-                    }                    
-                </div>
-                <div class="panel-body">
-                    <div class="col-xs-6 col-sm-6 col-md-6 skill-container">
-                        <p><span class="label label-default">主动技能</span></p>
-                        @foreach (var s in Model.SkillList)
-                        {
-                            <p class="sr-container">
-                                @Html.Partial("/Skill/SkillNameRender.cshtml", s)
-                            </p>
-                            <div class="skill-content">
-                                @Html.Partial("/Skill/SkillRender.cshtml", s)
-                            </div>
-                        }
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6 skill-container">
-                        <p><span class="label label-default">被动技能</span></p>
-                        @foreach (var s in Model.PassiveSkillList)
-                        {
-                            <p class="sr-container">
-                                @Html.Partial("/Skill/SkillNameRender.cshtml", s)
-                            </p>
-                            <div class="skill-content">
-                                @Html.Partial("/Skill/SkillRender.cshtml", s)
-                            </div>
-                        }
-                    </div>
-                </div>                
-            </div>            
+            </div>                        
         </div>
         <div class="col-sm-6 col-md-4">
             <div class="panel panel-inverse">
@@ -316,6 +349,43 @@
             </div>
             <div class="panel panel-inverse">
                 <div class="panel-heading">
+                    技能     
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-default" href="/skill/bag" role="button">配置</a>
+                        </div>
+                    }                    
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-6 col-sm-6 col-md-6 skill-container">
+                        <p><span class="label label-default">主动技能</span></p>
+                        @foreach (var s in Model.SkillList)
+                        {
+                            <p class="sr-container">
+                                @Html.Partial("/Skill/SkillNameRender.cshtml", s)
+                            </p>
+                            <div class="skill-content">
+                                @Html.Partial("/Skill/SkillRender.cshtml", s)
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 skill-container">
+                        <p><span class="label label-default">被动技能</span></p>
+                        @foreach (var s in Model.PassiveSkillList)
+                        {
+                            <p class="sr-container">
+                                @Html.Partial("/Skill/SkillNameRender.cshtml", s)
+                            </p>
+                            <div class="skill-content">
+                                @Html.Partial("/Skill/SkillRender.cshtml", s)
+                            </div>
+                        }
+                    </div>
+                </div>                
+            </div>
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
                     队伍
                     @if (!Model.IsReadOnly)
                     {
@@ -420,6 +490,15 @@
                         @*<p>
                             <span>总铜币：</span><span class="physical">@Model.CharacterDynamic.TotalMoney</span>
                         </p>*@
+                        <p>
+                            <span>总副本次数：</span><span class="state">@(Model.CharacterDynamic.BattleDungeonTotalCount)</span>
+                        </p>
+                        <p>
+                            <span>总胜利次数：</span><span class="state">@(Model.CharacterDynamic.BattleDungeonWinCount)</span>
+                        </p>
+                        <p>
+                            <span>总副本胜率：</span><span class="state">@(Model.CharacterDynamic.DungeonTotalWinRate)%</span>
+                        </p>
                     </div>
                 </div>
             </div>             
@@ -445,6 +524,30 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-xs map-apply">提交</button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalDungeonMap" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content model-inverse">
+            <div class="modal-header">
+                <span class="modal-title">切换副本</span>                                
+            </div>
+            <div class="modal-body">                
+                <div class="form-group">
+                    <label for="dungeon" class="control-label">副本选择</label>
+                    <select id="dungeon" name="dungeon" class="form-control">                        
+                        @foreach (var p in Model.DungeonMapList)
+                        {                           
+                            <option value="@p.MapId">@(p.MapName)（@(p.MapMinLv)~@(p.MapMaxLv)）</option>
+                        }
+                    </select>
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs map-d-apply">提交</button>
                 <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
             </div>
         </div>

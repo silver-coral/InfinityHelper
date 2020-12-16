@@ -12,7 +12,7 @@ namespace InfinityHelper.Server.Core
 
         public override void Execute()
         {
-            var allMaps = this._site.InitStaticAllMaps();
+            var allMaps = this._site.InitAllMaps();
             var dynamicList = CharacterDynamicCache.LoadAllDynamics();
             foreach (var cd in dynamicList)
             {
@@ -45,24 +45,33 @@ namespace InfinityHelper.Server.Core
                 {
                     site.InitChar();
 
+                    var group = site.InitArmyGroup();
+
                     if (cfg.IsGuaji)
                     {
-                        var group = site.InitArmyGroup();
+                        if (group == null)
+                        {
+                            BattleScheduler.AddChar(site);
+                        }
+                        else
+                        {
+                            site.Config.IsGuaji = false;
+                            CharacterConfigCache.SaveConfig(site.Config);
+                        }
+                    }
+                    if (cfg.IsDungeonGuaji)
+                    {
                         if (group != null)
                         {
                             if (site.CheckIsGroupCaption())
                             {
-                                BattleScheduler.AddChar(site);
+                                BattleScheduler.AddChar(site, true);
                             }
                             else
                             {
-                                site.Config.IsGuaji = false;
+                                site.Config.IsDungeonGuaji = false;
                                 CharacterConfigCache.SaveConfig(site.Config);
                             }
-                        }
-                        else
-                        {
-                            BattleScheduler.AddChar(site);
                         }
                     }
                 }

@@ -16,9 +16,7 @@ namespace InfinityHelper.Server.Core
            
             this._site.ArmyGroupJoin(aid);
             
-            CharacterConfigCache.ClearState(this._site.Config);
-
-            AllMapCache.ClearCache(this._site.CurrentCharId);
+            CharacterConfigCache.CancelGuaji(this._site.Config);           
 
             CharacterArmyGroupCache.ClearCache(this._site.CurrentCharId);
             var army = this._site.InitArmyGroup();

@@ -13,7 +13,7 @@ namespace InfinityHelper.Server.Core
         public override void Execute()
         {
             string eids = GetQuery("eids");
-            this._site.EquipSell(eids);
+            this._site.EquipSell(eids);            
 
             //CharacterCache.ClearCache(this._site.CurrentCharId);
             CharacterActivityCache.ClearCache(this._site.CurrentCharId);

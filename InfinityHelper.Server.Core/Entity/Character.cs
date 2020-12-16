@@ -41,6 +41,9 @@ namespace InfinityHelper.Server.Core
         public int RealmExp { get; set; }
         public string RealmName { get; set; }
         public int RealmUpExp { get; set; }
+        public int Online { get; set; }
+
+        public bool IsOffline { get { return this.Online == 1; } }
 
         string ICharacter.Id => this.Id;
 
@@ -54,6 +57,9 @@ namespace InfinityHelper.Server.Core
 
         [JsonIgnore]
         public bool IsGuaji { get; set; }
+
+        [JsonIgnore]
+        public bool IsDungeonGuaji { get; set; }
 
         [JsonIgnore]
         public decimal EPM { get; set; }

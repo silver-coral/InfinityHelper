@@ -22,6 +22,9 @@ namespace InfinityHelper.Server.Core
             _apiDict.Add("api/swithmap", s => new InfinitySwithMapApi(s));
             _apiDict.Add("api/guaji", s => new InfinityGuajiApi(s));
             _apiDict.Add("api/cancelguaji", s => new InfinityCancelGuajiApi(s));
+            _apiDict.Add("api/swithdmap", s => new InfinitySwithDungeonMapApi(s));
+            _apiDict.Add("api/dguaji", s => new InfinityDungeonGuajiApi(s));
+            _apiDict.Add("api/canceldguaji", s => new InfinityCancelDungeonGuajiApi(s));
             _apiDict.Add("api/clearcache", s => new InfinityClearCacheApi(s));
             _apiDict.Add("api/init", s => new InfinityInitApi(s));
             _apiDict.Add("api/equipon", s => new InfinityEquipOnApi(s));
@@ -52,6 +55,8 @@ namespace InfinityHelper.Server.Core
             _apiDict.Add("api/clearmap", s => new InfinityClearMapItemApi(s));
             _apiDict.Add("api/syntheticmake", s => new InfinitySyntheticMakeApi(s));
             _apiDict.Add("api/clearglobalcache", s => new InfinityClearGlobalCacheApi(s));
+            _apiDict.Add("api/offline", s => new InfinityOfflineApi(s));
+            _apiDict.Add("api/canceloffline", s => new InfinityCancelOfflineApi(s));
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
@@ -227,9 +232,12 @@ namespace InfinityHelper.Server.Core
                 {
                     var captionNo = group.CharaInfoVoList.FirstOrDefault(p => p.IsCaption).CharaNo;
                     var caption = CharacterCache.GetCharByNo(captionNo);
-                    group.CaptainName = caption.Name;
-                    group.CaptainNo = caption.AccountId;
-                    group.CaptionId = caption.Id;
+                    if (caption != null)
+                    {
+                        group.CaptainName = caption.Name;
+                        group.CaptainNo = caption.AccountId;
+                        group.CaptionId = caption.Id;
+                    }
                 }
                 return group;
             });
@@ -249,13 +257,13 @@ namespace InfinityHelper.Server.Core
 
         public List<BattleResult> BattleArmyRecord(string no)
         {
-            string path = string.Format("/foodie-api/gameAmry/getAmryRecord?charaNo={0}&mapId={1}", no, this.Config.CurrentMapId);
+            string path = string.Format("/foodie-api/gameAmry/getAmryRecord?charaNo={0}&mapId={1}", no, this.Config.CurrentDungeonMapId);
             return this.PostResult<List<BattleResult>>(path, null);
         }
 
         public List<BattleResult> BattleDungeon()
         {
-            string path = string.Format("/foodie-api/gameAmry/checkMapGenMon?charaId={0}&mapId={1}", this.CurrentCharId, this.Config.CurrentMapId);
+            string path = string.Format("/foodie-api/gameAmry/checkMapGenMon?charaId={0}&mapId={1}", this.CurrentCharId, this.Config.CurrentDungeonMapId);
             return this.PostResult<List<BattleResult>>(path, null);
         }
 
@@ -373,7 +381,8 @@ namespace InfinityHelper.Server.Core
                 return c;
             });
 
-            result.IsGuaji = BattleScheduler.CharDict.ContainsKey(result.Id);
+            result.IsGuaji = BattleScheduler.IsGuaji(result.Id);
+            result.IsDungeonGuaji = BattleScheduler.IsDungeonGuaji(result.Id);
             return result;
         }
 
@@ -423,21 +432,15 @@ namespace InfinityHelper.Server.Core
             return this.PostResult<List<PackageItem>>(path, null);
         }
 
-        public List<Map> InitStaticAllMaps()
+        public List<Map> InitAllMaps()
         {
-            return AllMapCache.TryGetValue("0", id =>
-            {
-                string path = "/foodie-api/gameChara/queryMapList";// "/foodie-api/gameChara/mapDropItems";
-                List<Map> mapList = this.GetResult<List<Map>>(path); //this.PostResult<List<Map>>(path, null);
-                path = "/foodie-api/gameAmry/queryMapList";
-                var dMapList = this.GetResult<List<Map>>(path);
-                foreach (var m in dMapList)
-                {
-                    m.IsDungeon = true;
-                    mapList.Add(m);
-                }
-                return mapList;
-            });
+            var maps = InitAllSingleMaps();
+            var dMaps = InitAllDungeonMaps();
+
+            List<Map> result = new List<Map>();
+            result.AddRange(maps);
+            result.AddRange(dMaps);
+            return result;
         }
 
         public bool CheckIsGroupCaption()
@@ -446,32 +449,29 @@ namespace InfinityHelper.Server.Core
             return group != null && group.CaptionId == this.CurrentCharId;
         }
 
-        public List<Map> InitAllMaps()
+        public List<Map> InitAllSingleMaps()
         {
-            return AllMapCache.TryGetValue(this.CurrentCharId, id =>
+            return AllMapCache.TryGetValue("0", id =>
             {
-                List<Map> mapList = new List<Map>();
-
-                var group = InitArmyGroup();
-                if (group != null)
-                {
-                    string path = "/foodie-api/gameAmry/queryMapList";
-                    var dMapList = this.GetResult<List<Map>>(path);
-                    foreach (var m in dMapList)
-                    {
-                        m.IsDungeon = true;
-                        mapList.Add(m);
-                    }
-                }
-                else
-                {
-                    string path = "/foodie-api/gameChara/queryMapList";// "/foodie-api/gameChara/mapDropItems";
-                    mapList = this.GetResult<List<Map>>(path); //this.PostResult<List<Map>>(path, null);
-                }
-
+                string path = "/foodie-api/gameChara/queryMapList";// "/foodie-api/gameChara/mapDropItems";
+                List<Map> mapList = this.GetResult<List<Map>>(path); //this.PostResult<List<Map>>(path, null);
                 return mapList;
             });
         }
+
+        public List<Map> InitAllDungeonMaps()
+        {
+            return AllMapCache.TryGetValue("1", id =>
+            {
+                string path = "/foodie-api/gameAmry/queryMapList";
+                var dMapList = this.GetResult<List<Map>>(path);
+                foreach (var m in dMapList)
+                {
+                    m.IsDungeon = true;                   
+                }
+                return dMapList;
+            });
+        }       
 
         public List<Skill> InitCharSkills()
         {
@@ -523,6 +523,18 @@ namespace InfinityHelper.Server.Core
         public string ArmyGroupRemoveChar(string no)
         {
             string path = string.Format("/foodie-api/gameAmry/kickOutAmry/?charaId={0}&charaNo={1}", this.CurrentCharId, no);
+            return this.PostResult<string>(path, null);
+        }
+
+        public OffLineResult EndOffline()
+        {
+            string path = string.Format("/foodie-api/gameChara/endOffline/?charaId={0}", this.CurrentCharId);
+            return this.PostResult<OffLineResult>(path, null);
+        }
+
+        public string StartOffline()
+        {
+            string path = string.Format("/foodie-api/gameChara/startOffline/?charaId={0}&mapId={1}", this.CurrentCharId, this.Config.CurrentMapId);
             return this.PostResult<string>(path, null);
         }
 
