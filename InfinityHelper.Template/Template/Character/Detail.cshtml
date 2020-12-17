@@ -7,8 +7,8 @@
     Character c = Model.Character;
 }
 @section head{
-    <script type="text/javascript" src="~/Scripts/Map.js?v=20201216"></script>
-    <script type="text/javascript" src="~/Scripts/Char.js?v=20201125"></script>
+    <script type="text/javascript" src="~/Scripts/Map.js?v=20201217"></script>
+    <script type="text/javascript" src="~/Scripts/Char.js?v=20201217"></script>
 }
 <div class="container">
     <div class="row">
@@ -66,23 +66,7 @@
                         </p>
                         <p>
                             <span>金币：<span class="lightning">@(c.Coin)</span></span>
-                        </p>
-                        <div class="col-xs-12 col-sm-12 col-md-12">                        
-                            <p>
-                                <span>总挂机时间：</span><span class="state">@(Model.CharacterDynamic.TotalTimeStr)</span>
-                            </p>                                              
-                        </div>
-                        @{
-                            var upTime = Model.Site.Dynamic.GetUpgradeTime(c.UpgradeExp - c.Exp);
-                            if(upTime != null)
-                            {        
-                                <div class="col-xs-12 col-sm-12 col-md-12"> 
-                                    <p>
-                                        <span>预计升级时间：@(string.Format("{0:yyyy-MM-dd HH:mm:ss}",upTime))</span>
-                                    </p>
-                                </div>
-                            }
-                        }                                                                 
+                        </p>                                                            
                     </div>
                 </div>
             </div>
@@ -121,6 +105,22 @@
                             <span>平均效率：</span><span class="state">@(Model.Site.Dynamic.EPM)</span>
                         </p>                                              
                     </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12">                        
+                        <p>
+                            <span>总挂机时间：</span><span class="state">@(Model.CharacterDynamic.TotalTimeStr)</span>
+                        </p>                                              
+                    </div>
+                    @{
+                        var upTime = Model.Site.Dynamic.GetUpgradeTime(c.UpgradeExp - c.Exp);
+                        if(upTime != null)
+                        {        
+                            <div class="col-xs-12 col-sm-12 col-md-12"> 
+                                <p>
+                                    <span>预计升级时间：@(string.Format("{0:yyyy-MM-dd HH:mm:ss}",upTime))</span>
+                                </p>
+                            </div>
+                        }
+                    }
                 </div>
                 <div class="panel-footer">
                     @if (c.IsGuaji)

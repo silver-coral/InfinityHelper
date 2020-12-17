@@ -8,8 +8,8 @@ namespace InfinityHelper.Server.Core
 {
     public class EquipUpMaterial
     {
-        public int Coin { get; set; }
-        public int ConinType { get; set; }
+        public int? Coin { get; set; }
+        public int? ConinType { get; set; }
         public string ExtraRange { get; set; }
         public string MaterOne { get; set; }
         public string MaterOneName { get; set; }
@@ -22,6 +22,6 @@ namespace InfinityHelper.Server.Core
         public string MinRange { get; set; }
         public int MinStrengLevel { get; set; }
 
-        public string PriceTypeStr { get { return ConinType == 0 ? "铜币" : "金币"; } }
+        public string PriceTypeStr { get { return ConinType == null ? "无" : ConinType == 0 ? "铜币" : "金币"; } }
     }
 }

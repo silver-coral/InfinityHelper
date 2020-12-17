@@ -19,7 +19,20 @@
     });
 
     $(".offline-cancel").on("click", function () {
-        $.postJson("/api/canceloffline");    
+        $.postJson("/api/canceloffline", {}, function (data) {
+            var html = $("<div></div>")
+                .append($("<p></p>").append(data.OutboardTime))
+                .append($("<p>战斗次数：</p>").append(data.CombatNum))
+                .append($("<p>胜利次数：</p>").append(data.CombatSuccessNum))
+                .append($("<p>获得经验：</p>").append(data.CountExp))
+                .append($("<p>获得装备：</p>").append(data.CountItemNum))
+                .append($("<p>自动出售：</p>").append(data.CountSellNum))
+                .append($("<p>获得铜币：</p>").append(data.CountMoney)).html();
+                
+            confirm(html, function () {
+                window.location.reload();
+            });
+        });    
     });
 
     $(".map-d-apply").on("click", function () {

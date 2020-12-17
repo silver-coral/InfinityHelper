@@ -52,6 +52,12 @@
         });
     });
 
+    $(".epm-d-reset").click(function () {
+        confirm("确认重置效率？", function () {
+            $.postJson("/api/resetd");
+        });
+    });
+
     $("#modalRealm").on('show.bs.modal', function (event) {  
         var modal = $(this);
         $.postJson("/api/realmmaterial", {}, function (data) {

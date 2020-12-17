@@ -57,6 +57,7 @@ namespace InfinityHelper.Server.Core
             _apiDict.Add("api/clearglobalcache", s => new InfinityClearGlobalCacheApi(s));
             _apiDict.Add("api/offline", s => new InfinityOfflineApi(s));
             _apiDict.Add("api/canceloffline", s => new InfinityCancelOfflineApi(s));
+            _apiDict.Add("api/resetd", s => new InfinityResetDungeonDynamicApi(s));
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
