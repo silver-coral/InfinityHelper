@@ -14,6 +14,14 @@
         $.postJson("/api/equipbind?eid=" + eid);
     });
 
+    $(".equip-appraisal").on("click", function () {
+        var eid = $(this).data("id");
+        var equip = $(this).parent().find(".equip-name");        
+        confirm("确认鉴定" + equip.prop("outerHTML") + "？", function () {
+            $.postJson("/api/equipappraisal?eid=" + eid);
+        });
+    });
+
     $(".equip-unbind").on("click", function () {
         var eid = $(this).data("id");
         $.postJson("/api/equipunbind?eid=" + eid);

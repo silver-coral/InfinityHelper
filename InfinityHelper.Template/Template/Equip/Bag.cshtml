@@ -2,7 +2,7 @@
 @using InfinityHelper.Server.Core;
 @inherits InfinityServerTemplate<BagModel>
 @section head{   
-    <script type="text/javascript" src="~/Scripts/Equip.js?v=20201114"></script>
+    <script type="text/javascript" src="~/Scripts/Equip.js?v=20201221"></script>
 }
 <div class="container">
     <div class="row">
@@ -95,12 +95,16 @@
                                 }
                                 else if(e.RealType != ItemType.Material)
                                 {
-                                    if (e.IsRequiredValid(this.Model.Character.Level))
+                                    //if (e.IsRequiredValid(this.Model.Character.Level))
                                     {
                                         <span data-id="@e.RealId" class="sr-only label label-primary equip-on">装备</span>                                                                    
                                     }
                                     <span data-id="@e.RealId" class="sr-only label label-default" data-toggle="modal" data-target="#modalUpgrade">强化</span>
-                                }                                
+                                } 
+                                @if (!e.IsAppraisal)
+                                {
+                                    <span data-id="@e.RealId" class="sr-only label label-success equip-appraisal">鉴定</span> 
+                                }
                                 @if (e.Bind == 1)
                                 {
                                     <span data-id="@e.RealId" class="sr-only label label-warning equip-unbind">解绑</span> 
@@ -109,7 +113,7 @@
                                 {
                                     <span data-id="@e.RealId" class="sr-only label label-info equip-bind">绑定</span> 
                                     <span data-id="@e.RealId" class="sr-only label label-danger equip-sell">出售</span>
-                                }                                                                                                      
+                                }
                             </p>
                             <div class="equip-content">
                                 @Html.Partial("/Equip/EquipRender.cshtml", e)

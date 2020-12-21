@@ -58,6 +58,7 @@ namespace InfinityHelper.Server.Core
             _apiDict.Add("api/offline", s => new InfinityOfflineApi(s));
             _apiDict.Add("api/canceloffline", s => new InfinityCancelOfflineApi(s));
             _apiDict.Add("api/resetd", s => new InfinityResetDungeonDynamicApi(s));
+            _apiDict.Add("api/equipappraisal", s => new InfinityEquipAppraisalApi(s));
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
@@ -536,6 +537,12 @@ namespace InfinityHelper.Server.Core
         public string StartOffline()
         {
             string path = string.Format("/foodie-api/gameChara/startOffline/?charaId={0}&mapId={1}", this.CurrentCharId, this.Config.CurrentMapId);
+            return this.PostResult<string>(path, null);
+        }
+
+        public string EquipAppraisal(string eid)
+        {
+            string path = string.Format("/foodie-api/gameCharaEquip/appraisalEquitBypackage?charaId={0}&packItemId={1}", this.CurrentCharId, eid);
             return this.PostResult<string>(path, null);
         }
 

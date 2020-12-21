@@ -138,6 +138,16 @@
             <span>行动速度 @(plus)@(e.Speed)</span>            
         </p>
     }
+    @if(e.IsAppraisal)
+    {
+        <p class="divider"></p>
+        foreach(var av in e.AffixVoList)
+        {
+            <p>            
+                <span class="c@((int)av.AffixColor)">@av.AffixDescribe</span>            
+            </p>
+        }
+    }
     @if (e.RealCoin > 0 || !string.IsNullOrEmpty(e.RealDesc))
     {
         <p class="divider"></p>  

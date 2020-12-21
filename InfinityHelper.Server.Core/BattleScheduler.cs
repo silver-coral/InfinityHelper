@@ -494,7 +494,7 @@ namespace InfinityHelper.Server.Core
                         Logger.Error(string.Format("CharId={0},MapId={1},Error={2}", this._charId, this._site.Config.CurrentMapId, ex.Message));
                         this.OnError(this._charId, ex.Message);
 
-                        if (tryTimes < 30)
+                        if (tryTimes < 50)
                         {
                             sleepTime = 10 * (tryTimes + 1) * 1000; //等10秒重试，而不是简单地退出
                             tryTimes++;

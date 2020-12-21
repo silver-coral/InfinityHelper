@@ -71,6 +71,7 @@
     <Compile Include="Api\InfinityClearMapItemApi.cs" />
     <Compile Include="Api\InfinityDungeonGuajiApi.cs" />
     <Compile Include="Api\InfinityCancelOfflineApi.cs" />
+    <Compile Include="Api\InfinityEquipAppraisalApi.cs" />
     <Compile Include="Api\InfinityOfflineApi.cs" />
     <Compile Include="Api\InfinityResetDungeonDynamicApi.cs" />
     <Compile Include="Api\InfinitySwithDungeonMapApi.cs" />

@@ -97,6 +97,31 @@ namespace InfinityHelper.Server.Core
         public int? StrengMana { get; set; }
         public int? StrengPhysique { get; set; }
         public int? StrengSpirit { get; set; }
+        public List<AffixVo> AffixVoList { get; set; }
+
+        public bool IsAppraisal { get { return this.AffixVoList != null && this.AffixVoList.Count > 0; } }
+    }
+
+    public class AffixVo
+    {
+        public string AffixDescribe { get; set; }
+        public string AffixLevel { get; set; }
+        public string AffixName { get; set; }
+
+        public ItemColor AffixColor
+        {
+            get
+            {
+                switch (AffixLevel)
+                {
+                    case "T0":return ItemColor.Orange;
+                    case "T1":return ItemColor.Red;
+                    case "T2":return ItemColor.Pink;
+                    case "T3":return ItemColor.Green;
+                    default:return ItemColor.Black;
+                }
+            }
+        }
     }
 
     public class PackageItem : ItemBase
