@@ -110,7 +110,7 @@ namespace InfinityHelper.Server.Core
 
         public void Cancel()
         {
-            _ts.Cancel();
+            _ts.Cancel();            
         }
 
         private int ConvertDamage(string d)
@@ -490,11 +490,11 @@ namespace InfinityHelper.Server.Core
                     }
                     catch (OperationCanceledException) { } //人工取消
                     catch (Exception ex)
-                    {                       
-                        Logger.Error(string.Format("CharId={0},MapId={1},Error={2}", this._charId, this._site.Config.CurrentMapId, ex.Message));
+                    {
+                        Logger.Error(string.Format("CharNo={0},Name={1},MapId={2},Error={3}", this._site.CurrentChar.AccountId, this._site.CurrentChar.Name, this._site.Config.CurrentMapId, ex.Message));
                         this.OnError(this._charId, ex.Message);
 
-                        if (tryTimes < 50)
+                        if (tryTimes < 10)
                         {
                             sleepTime = 10 * (tryTimes + 1) * 1000; //等10秒重试，而不是简单地退出
                             tryTimes++;
@@ -515,9 +515,12 @@ namespace InfinityHelper.Server.Core
             catch (ThreadAbortException) { } //IIS关闭，强行中止线程
             catch (Exception ex)
             {
-                Logger.Error(string.Format("CharId={0},MapId={1},Error={2}", this._charId, this._site.Config.CurrentMapId, ex.Message));
+                Logger.Error(string.Format("CharNo={0},Name={1},MapId={2},Error={3}", this._site.CurrentChar.AccountId, this._site.CurrentChar.Name, this._site.Config.CurrentMapId, ex.ToString()));
                 this.OnError(this._charId, ex.Message);
+
                 BattleScheduler.CancelChar(this._charId);
+                this._site.Config.IsGuaji = false;
+                CharacterConfigCache.SaveConfig(this._site.Config);
             }
         }
 

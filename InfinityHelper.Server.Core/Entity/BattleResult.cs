@@ -24,7 +24,7 @@ namespace InfinityHelper.Server.Core
         public IEnumerable<ICharacter> RightList { get { return this.GameMonList; } }
 
         public decimal WaitSecond { get { return this.Wait / 1000m; } }
-        public int Wait { get { return this.CombatInfo.Count * 1500 + 6000; } }  
+        public int Wait { get { return this.CombatInfo.Count * 1500 + 6500; } }  
         public int TotalCount { get; set; }
         public decimal EPM { get; set; }
 
